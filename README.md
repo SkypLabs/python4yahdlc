@@ -1,5 +1,7 @@
 # python4yahdlc
 
+![Build Status](https://travis-ci.org/SkypLabs/python4yahdlc.svg)
+
 python4yahdlc is a Python bindings for the [yahdlc][1] library.
 
 ## Dependencies
