@@ -6,7 +6,9 @@
 
 #define TOTAL_FRAME_LENGTH		MAX_FRAME_PAYLOAD + HEADERS_LENGTH
 
-static PyObject *YahdlcError;
+static PyObject *Yahdlc_MessageError;
+static PyObject *Yahdlc_FCSError;
+static PyObject *Yahdlc_SeqNumError;
 
 /* ---------- yahdlc function ---------- */
 
@@ -26,7 +28,7 @@ static PyObject *get_data(PyObject *self, PyObject *args)
 
 	if (buf_length > TOTAL_FRAME_LENGTH)
 	{
-		PyErr_SetString(YahdlcError, "buffer too long");
+		PyErr_SetString(PyExc_ValueError, "buffer too long");
 		return NULL;
 	}
 
@@ -46,22 +48,22 @@ static PyObject *get_data(PyObject *self, PyObject *args)
 	}
 	else if (ret == -EINVAL)
 	{
-		PyErr_SetString(YahdlcError, "invalid parameter");
+		PyErr_SetString(PyExc_ValueError, "invalid parameter");
 		return NULL;
 	}
 	else if (ret == -ENOMSG)
 	{
-		PyErr_SetString(YahdlcError, "invalid message");
+		PyErr_SetString(Yahdlc_MessageError, "invalid message");
 		return NULL;
 	}
 	else if (ret == -EIO)
 	{
-		PyErr_SetString(YahdlcError, "invalid FCS");
+		PyErr_SetString(Yahdlc_FCSError, "invalid FCS");
 		return NULL;
 	}
 	else
 	{
-		PyErr_SetString(YahdlcError, "unknown error");
+		PyErr_SetString(PyExc_RuntimeError, "unknown error");
 		return NULL;
 	}
 }
@@ -93,12 +95,12 @@ static PyObject *frame_data(PyObject *self, PyObject *args)
 
 	if (data_length > MAX_FRAME_PAYLOAD)
 	{
-		PyErr_SetString(YahdlcError, "data too long");
+		PyErr_SetString(PyExc_ValueError, "data too long");
 		return NULL;
 	}
 	else if (seq_no < 0 || seq_no > 7)
 	{
-		PyErr_SetString(YahdlcError, "invalid sequence number");
+		PyErr_SetString(Yahdlc_SeqNumError, "invalid sequence number");
 		return NULL;
 	}
 
@@ -111,7 +113,7 @@ static PyObject *frame_data(PyObject *self, PyObject *args)
 		return PyBytes_FromStringAndSize(frame_data, frame_length);
 	else
 	{
-		PyErr_SetString(YahdlcError, "invalid parameter");
+		PyErr_SetString(PyExc_ValueError, "invalid parameter");
 		return NULL;
 	}
 }
@@ -152,9 +154,17 @@ PyMODINIT_FUNC PyInit_yahdlc(void)
 	if (m == NULL)
 		return NULL;
 
-	YahdlcError = PyErr_NewException("yahdlc.error", NULL, NULL);
-	Py_INCREF(YahdlcError);
-	PyModule_AddObject(m, "error", YahdlcError);
+	Yahdlc_MessageError = PyErr_NewException("yahdlc.MessageError", NULL, NULL);
+	Py_INCREF(Yahdlc_MessageError);
+	PyModule_AddObject(m, "MessageError", Yahdlc_MessageError);
+
+	Yahdlc_FCSError = PyErr_NewException("yahdlc.FCSError", NULL, NULL);
+	Py_INCREF(Yahdlc_FCSError);
+	PyModule_AddObject(m, "FCSError", Yahdlc_FCSError);
+
+	Yahdlc_SeqNumError = PyErr_NewException("yahdlc.SeqNumError", NULL, NULL);
+	Py_INCREF(Yahdlc_SeqNumError);
+	PyModule_AddObject(m, "SeqNumError", Yahdlc_SeqNumError);
 
 	PyModule_AddIntConstant(m, "FRAME_DATA", YAHDLC_FRAME_DATA);
 	PyModule_AddIntConstant(m, "FRAME_ACK", YAHDLC_FRAME_ACK);
