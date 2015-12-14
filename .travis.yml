@@ -6,4 +6,4 @@ python:
   - 3.4
   - 3.5
 
-script: python setup.py build
+script: python setup.py test

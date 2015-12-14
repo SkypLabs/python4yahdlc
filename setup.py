@@ -1,4 +1,4 @@
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 yahdlc = Extension(
 	'yahdlc',
@@ -16,4 +16,5 @@ setup(
 	author_email = 'skyper@skyplabs.net',
 	url = 'https://github.com/SkypLabs/python4yahdlc',
 	ext_modules = [yahdlc],
+	test_suite = 'test',
 )
