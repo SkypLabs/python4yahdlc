@@ -8,7 +8,6 @@
 
 static PyObject *Yahdlc_MessageError;
 static PyObject *Yahdlc_FCSError;
-static PyObject *Yahdlc_SeqNumError;
 
 /* ---------- yahdlc function ---------- */
 
@@ -98,9 +97,14 @@ static PyObject *frame_data(PyObject *self, PyObject *args)
 		PyErr_SetString(PyExc_ValueError, "data too long");
 		return NULL;
 	}
+	else if (frame_type != YAHDLC_FRAME_DATA && frame_type != YAHDLC_FRAME_ACK && frame_type != YAHDLC_FRAME_NACK)
+	{
+		PyErr_SetString(PyExc_ValueError, "bad frame type");
+		return NULL;
+	}
 	else if (seq_no < 0 || seq_no > 7)
 	{
-		PyErr_SetString(Yahdlc_SeqNumError, "invalid sequence number");
+		PyErr_SetString(PyExc_ValueError, "invalid sequence number");
 		return NULL;
 	}
 
@@ -161,10 +165,6 @@ PyMODINIT_FUNC PyInit_yahdlc(void)
 	Yahdlc_FCSError = PyErr_NewException("yahdlc.FCSError", NULL, NULL);
 	Py_INCREF(Yahdlc_FCSError);
 	PyModule_AddObject(m, "FCSError", Yahdlc_FCSError);
-
-	Yahdlc_SeqNumError = PyErr_NewException("yahdlc.SeqNumError", NULL, NULL);
-	Py_INCREF(Yahdlc_SeqNumError);
-	PyModule_AddObject(m, "SeqNumError", Yahdlc_SeqNumError);
 
 	PyModule_AddIntConstant(m, "FRAME_DATA", YAHDLC_FRAME_DATA);
 	PyModule_AddIntConstant(m, "FRAME_ACK", YAHDLC_FRAME_ACK);
