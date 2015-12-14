@@ -30,5 +30,18 @@ class TestYahdlc(unittest.TestCase):
 		self.assertEqual(FRAME_DATA, type)
 		self.assertEqual(0, seq_no)
 
+	def test_decode_frame_with_1B_buffer(self):
+		frame = frame_data('test')
+
+		for c in frame:
+			try:
+				data, type, seq_no = get_data(frame)
+			except MessageError:
+				pass
+
+		self.assertEqual(b'test', data)
+		self.assertEqual(FRAME_DATA, type)
+		self.assertEqual(0, seq_no)
+
 if __name__ == '__main__':
 	unittest.main()
