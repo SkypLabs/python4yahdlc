@@ -25,6 +25,30 @@ To build and make the Python module work, you need the following elements :
     cd python4yahdlc
     python3 setup.py install
 
+## Usage
+
+To generate a new HDLC data frame :
+
+    from yahdlc import *
+
+    frame = frame_data('hello world!')
+
+To generate a new HDLC ACK frame with a specific sequence number :
+
+    frame = frame_data('', FRAME_ACK, 3)
+
+The highest sequence number is 7 and the following frame types are available :
+
+* FRAME_DATA
+* FRAME_ACK
+* FRAME_NACK
+
+Note that when you generate an ACK or NACK frame, the payload is useless.
+
+To decode a received HDLC frame :
+
+    data, type, seq_no = get_data(frame)
+
 ## License
 
 This project is released under the [GPL version 3][3] license. The [yahdlc][1] library is released under the [MIT][4] license.
