@@ -44,11 +44,24 @@ def wait_for_ack(e):
 
 	if type != FRAME_ACK and type != FRAME_NACK:
 		stderr.write('[x] Bad frame type: {0}\n'.format(type))
+		e.fsm.bad_frame_received()
 	elif type == FRAME_ACK:
 		stdout.write('[*] ACK received\n')
+
+		if seq_no != 2:
+			stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
+		else:
+			stdout.write('[*] Sequence number OK\n')
+
 		e.fsm.ack_received()
 	else:
 		stdout.write('[*] NACK received\n')
+
+		if seq_no != 1:
+			stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
+		else:
+			stdout.write('[*] Sequence number OK\n')
+
 		e.fsm.nack_received()
 
 def pause(e):
@@ -64,6 +77,7 @@ try:
 			{'name': 'send_ok', 'src': 'send_data', 'dst': 'wait_ack'},
 			{'name': 'ack_received', 'src': 'wait_ack', 'dst': 'pause'},
 			{'name': 'nack_received', 'src': 'wait_ack', 'dst': 'send_data'},
+			{'name': 'bad_frame_received', 'src': 'wait_ack', 'dst': 'pause'},
 			{'name': 'timeout', 'src': 'wait_ack', 'dst': 'send_data'},
 			{'name': 'timesup', 'src': 'pause', 'dst': 'send_data'},
 		],
@@ -74,6 +88,8 @@ try:
 			'onconnection_ok': send_data_frame,
 			'onsend_ok': wait_for_ack,
 			'onack_received': pause,
+			'onnack_received': send_data_frame,
+			'onbad_frame_received': pause,
 			'ontimesup': send_data_frame,
 		},
 	})

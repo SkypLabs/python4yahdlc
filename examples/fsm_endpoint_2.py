@@ -45,6 +45,12 @@ def wait_for_data(e):
 		e.fsm.data_ko()
 	else:
 		stdout.write('[*] Data frame received\n')
+
+		if seq_no != 1:
+			stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
+		else:
+			stdout.write('[*] Sequence number OK\n')
+
 		e.fsm.data_ok()
 
 def send_ack_frame(e):
@@ -71,8 +77,8 @@ try:
 		'callbacks': {
 			'oninit': serial_connection,
 			'onreenterinit': retry_serial_connection,
-			'onconnection_ko': serial_connection,
 			'onconnection_ok': wait_for_data,
+			'onconnection_ko': serial_connection,
 			'ondata_ok': send_ack_frame,
 			'ondata_ko': send_nack_frame,
 			'onack_sent': wait_for_data,
