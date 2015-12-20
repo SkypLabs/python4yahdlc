@@ -20,7 +20,7 @@ except serial.serialutil.SerialException as e:
 	exit(1)
 
 stdout.write('[*] Sending data frame ...\n')
-ser.write(frame_data('test', FRAME_DATA, 1))
+ser.write(frame_data('test', FRAME_DATA, 0))
 
 stdout.write('[*] Waiting for (N)ACK ...\n')
 
@@ -44,13 +44,18 @@ if type != FRAME_ACK and type != FRAME_NACK:
 	stderr.write('[x] Bad frame type: {0}\n'.format(type))
 elif type == FRAME_ACK:
 	stdout.write('[*] ACK received\n')
+
+	if seq_no != 1:
+		stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
+	else:
+		stdout.write('[*] Sequence number OK\n')
 else:
 	stdout.write('[*] NACK received\n')
 
-if seq_no != 2:
-	stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
-else:
-	stdout.write('[*] Sequence number OK\n')
+	if seq_no != 0:
+		stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
+	else:
+		stdout.write('[*] Sequence number OK\n')
 
 stdout.write('[*] Done\n')
 ser.close()

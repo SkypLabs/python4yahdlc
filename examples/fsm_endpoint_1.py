@@ -29,7 +29,7 @@ def retry_serial_connection(e):
 
 def send_data_frame(e):
 	stdout.write('[*] Sending data frame ...\n')
-	ser.write(frame_data('test', FRAME_DATA, 1))
+	ser.write(frame_data('test', FRAME_DATA, 0))
 	e.fsm.send_ok()
 
 def wait_for_ack(e):
@@ -48,7 +48,7 @@ def wait_for_ack(e):
 	elif type == FRAME_ACK:
 		stdout.write('[*] ACK received\n')
 
-		if seq_no != 2:
+		if seq_no != 1:
 			stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
 		else:
 			stdout.write('[*] Sequence number OK\n')
@@ -57,7 +57,7 @@ def wait_for_ack(e):
 	else:
 		stdout.write('[*] NACK received\n')
 
-		if seq_no != 1:
+		if seq_no != 0:
 			stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
 		else:
 			stdout.write('[*] Sequence number OK\n')

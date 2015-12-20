@@ -46,7 +46,7 @@ def wait_for_data(e):
 	else:
 		stdout.write('[*] Data frame received\n')
 
-		if seq_no != 1:
+		if seq_no != 0:
 			stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
 		else:
 			stdout.write('[*] Sequence number OK\n')
@@ -55,12 +55,12 @@ def wait_for_data(e):
 
 def send_ack_frame(e):
 	stdout.write('[*] Sending ACK ...\n')
-	ser.write(frame_data('', FRAME_ACK, 2))
+	ser.write(frame_data('', FRAME_ACK, 1))
 	e.fsm.ack_sent()
 
 def send_nack_frame(e):
 	stdout.write('[*] Sending NACK ...\n')
-	ser.write(frame_data('', FRAME_NACK, 2))
+	ser.write(frame_data('', FRAME_NACK, 0))
 	e.fsm.nack_sent()
 
 try:

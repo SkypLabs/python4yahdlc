@@ -30,7 +30,7 @@ while True:
 	except FCSError:
 		stderr.write('[x] Bad FCS\n')
 		stdout.write('[*] Sending NACK ...\n')
-		ser.write(frame_data('', FRAME_NACK, 2))
+		ser.write(frame_data('', FRAME_NACK, 0))
 		ser.close()
 		exit(0)
 	except KeyboardInterrupt:
@@ -46,7 +46,7 @@ if type != FRAME_DATA:
 else:
 	stdout.write('[*] Data frame received\n')
 
-if seq_no != 1:
+if seq_no != 0:
 	stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
 	frame_error = True
 else:
@@ -54,10 +54,10 @@ else:
 
 if frame_error == False:
 	stdout.write('[*] Sending ACK ...\n')
-	ser.write(frame_data('', FRAME_ACK, 2))
+	ser.write(frame_data('', FRAME_ACK, 1))
 else:
 	stdout.write('[*] Sending NACK ...\n')
-	ser.write(frame_data('', FRAME_NACK, 2))
+	ser.write(frame_data('', FRAME_NACK, 0))
 
 stdout.write('[*] Done\n')
 ser.close()
