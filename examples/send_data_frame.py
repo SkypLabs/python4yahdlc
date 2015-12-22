@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import serial
+import signal
 from yahdlc import *
 from sys import stdout, stderr
+from time import sleep
 
 # Serial port configuration
 ser = serial.Serial()
@@ -24,14 +26,29 @@ ser.write(frame_data('test', FRAME_DATA, 0))
 
 stdout.write('[*] Waiting for (N)ACK ...\n')
 
+def timeout_handler(signum, frame):
+	raise TimeoutError('[x] Timeout')
+
+signal.signal(signal.SIGALRM, timeout_handler)
+# 1-second timeout
+signal.alarm(1)
+
 while True:
 	try:
+		# 200 µs
+		sleep(200 / 1000000.0)
 		data, type, seq_no = get_data(ser.read(ser.inWaiting()))
+		signal.alarm(0)
 		break
 	except MessageError:
 		pass
 	except FCSError:
 		stderr.write('[x] Bad FCS\n')
+		stdout.write('[*] Done\n')
+		ser.close()
+		exit(0)
+	except TimeoutError as e:
+		stderr.write(str(e) + '\n')
 		stdout.write('[*] Done\n')
 		ser.close()
 		exit(0)

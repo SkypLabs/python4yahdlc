@@ -4,6 +4,7 @@
 import serial
 from yahdlc import *
 from sys import stdout, stderr
+from time import sleep
 
 # Serial port configuration
 ser = serial.Serial()
@@ -23,6 +24,8 @@ stdout.write('[*] Waiting for data ...\n')
 
 while True:
 	try:
+		# 200 µs
+		sleep(200 / 1000000.0)
 		data, type, seq_no = get_data(ser.read(ser.inWaiting()))
 		break
 	except MessageError:

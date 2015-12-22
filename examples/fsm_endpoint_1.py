@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import serial
+import signal
 from yahdlc import *
 from fysom import Fysom
 from sys import stdout, stderr
@@ -33,14 +34,27 @@ def send_data_frame(e):
 	e.fsm.send_ok()
 
 def wait_for_ack(e):
+	def timeout_handler(signum, frame):
+		raise TimeoutError('[x] Timeout')
+
 	stdout.write('[*] Waiting for (N)ACK ...\n')
+
+	signal.signal(signal.SIGALRM, timeout_handler)
+	# 1-second timeout
+	signal.alarm(1)
 
 	while True:
 		try:
+			# 200 µs
+			sleep(200 / 1000000.0)
 			data, type, seq_no = get_data(ser.read(ser.inWaiting()))
+			signal.alarm(0)
 			break
 		except MessageError:
 			pass
+		except TimeoutError as err:
+			stderr.write(str(err) + '\n')
+			e.fsm.timeout()
 
 	if type != FRAME_ACK and type != FRAME_NACK:
 		stderr.write('[x] Bad frame type: {0}\n'.format(type))
@@ -90,6 +104,7 @@ try:
 			'onack_received': pause,
 			'onnack_received': send_data_frame,
 			'onbad_frame_received': pause,
+			'ontimeout': send_data_frame,
 			'ontimesup': send_data_frame,
 		},
 	})
