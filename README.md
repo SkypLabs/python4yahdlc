@@ -49,7 +49,7 @@ To decode a received HDLC frame :
 
     data, type, seq_no = get_data(frame)
 
-For a more advanced use, take a look at the examples available in the [examples][2] folder.
+For a more advanced use, take a look at the examples available in the [examples][5] folder.
 
 ## License
 
@@ -59,3 +59,4 @@ This project is released under the [GPL version 3][3] license. The [yahdlc][1] l
   [2]: https://pypi.python.org/pypi/setuptools
   [3]: https://www.gnu.org/licenses/gpl.txt
   [4]: https://github.com/bang-olufsen/yahdlc/blob/master/LICENSE
+  [5]: https://github.com/SkypLabs/python4yahdlc/tree/master/examples
