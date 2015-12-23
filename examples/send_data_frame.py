@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# This script needs some external modules.
+# To install them:
+# pip3 install pyserial
+
+# To create a virtual serial bus, you can use socat as followed:
+# socat -d -d pty,raw,echo=0 pty,raw,echo=0
+# Then, edit ser.port variable as needed
+
 import serial
 import signal
 from yahdlc import *
