@@ -49,6 +49,8 @@ To decode a received HDLC frame :
 
     data, type, seq_no = get_data(frame)
 
+For a more advanced use, take a look at the examples available in the [examples][2] folder.
+
 ## License
 
 This project is released under the [GPL version 3][3] license. The [yahdlc][1] library is released under the [MIT][4] license.
