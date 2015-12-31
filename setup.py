@@ -8,7 +8,7 @@ yahdlc = Extension(
 
 setup(
 	name = 'python4yahdlc',
-	version = '0.1.0',
+	version = '1.0.0',
 	description = 'Python bindings for the yahdlc library',
 	license = 'GPLv3',
 	keywords = 'hdlc yahdlc bindings',
