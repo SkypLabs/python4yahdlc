@@ -1,9 +1,18 @@
 from setuptools import setup, Extension
+from os.path import dirname, abspath
+
+DIR = dirname(abspath(__file__))
 
 yahdlc = Extension(
 	'yahdlc',
-	sources = ['src/python4yahdlc.c', 'lib/fcs16.c', 'lib/yahdlc.c'],
-	include_dirs = ['include/'],
+	sources = [
+		DIR + '/src/python4yahdlc.c',
+		DIR + '/lib/fcs16.c',
+		DIR + '/lib/yahdlc.c'
+	],
+	include_dirs = [
+		DIR + '/include/'
+	],
 )
 
 setup(
