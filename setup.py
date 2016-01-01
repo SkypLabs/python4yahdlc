@@ -15,6 +15,7 @@ setup(
 	author = 'Paul-Emmanuel Raoul',
 	author_email = 'skyper@skyplabs.net',
 	url = 'https://github.com/SkypLabs/python4yahdlc',
+	download_url = 'https://github.com/SkypLabs/python4yahdlc/archive/v1.0.0.zip',
 	ext_modules = [yahdlc],
 	test_suite = 'test',
 )
