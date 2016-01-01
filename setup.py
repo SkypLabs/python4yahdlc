@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from setuptools import setup, Extension
 from os.path import dirname, abspath
 
