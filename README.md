@@ -9,7 +9,7 @@ python4yahdlc is a Python bindings for the [yahdlc][1] library.
 To build and make the Python module work, you need the following elements :
 
  * Python 3
- * The **[setuptools][2]** package
+ * The **[setuptools][2]** package (only to build the module from sources)
 
 ### On Fedora
 
@@ -20,6 +20,12 @@ To build and make the Python module work, you need the following elements :
     aptitude install python3-setuptools
 
 ## Installation
+
+### With pip (recommanded)
+
+    pip3 install python4yahdlc
+
+### From sources
 
     git clone git@github.com:SkypLabs/python4yahdlc.git
     cd python4yahdlc
