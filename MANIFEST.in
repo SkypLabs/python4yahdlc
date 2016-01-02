@@ -1,0 +1,3 @@
+include src/*.c
+include lib/*.c
+include include/*.h
