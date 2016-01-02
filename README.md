@@ -27,7 +27,7 @@ To build and make the Python module work, you need the following elements :
 
 ### From sources
 
-    git clone git@github.com:SkypLabs/python4yahdlc.git
+    git clone https://github.com/SkypLabs/python4yahdlc.git
     cd python4yahdlc
     python3 setup.py install
 
