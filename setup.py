@@ -28,6 +28,8 @@ setup(
 	author_email = 'skyper@skyplabs.net',
 	url = 'https://github.com/SkypLabs/python4yahdlc',
 	download_url = 'https://github.com/SkypLabs/python4yahdlc/archive/v{0}.zip'.format(VERSION),
+	setup_requires = ['setuptools-markdown'],
+	long_description_markdown_filename = 'README.md',
 	ext_modules = [yahdlc],
 	test_suite = 'test',
 )
