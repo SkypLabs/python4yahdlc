@@ -4,6 +4,7 @@ from setuptools import setup, Extension
 from os.path import dirname, abspath
 
 DIR = dirname(abspath(__file__))
+VERSION = '1.0.2'
 
 yahdlc = Extension(
 	'yahdlc',
@@ -19,14 +20,14 @@ yahdlc = Extension(
 
 setup(
 	name = 'python4yahdlc',
-	version = '1.0.2',
+	version = VERSION,
 	description = 'Python bindings for the yahdlc library',
 	license = 'GPLv3',
 	keywords = 'hdlc yahdlc bindings',
 	author = 'Paul-Emmanuel Raoul',
 	author_email = 'skyper@skyplabs.net',
 	url = 'https://github.com/SkypLabs/python4yahdlc',
-	download_url = 'https://github.com/SkypLabs/python4yahdlc/archive/v1.0.0.zip',
+	download_url = 'https://github.com/SkypLabs/python4yahdlc/archive/v{0}.zip'.format(VERSION),
 	ext_modules = [yahdlc],
 	test_suite = 'test',
 )
