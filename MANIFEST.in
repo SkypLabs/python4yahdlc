@@ -1,3 +1,4 @@
 include src/*.c
 include lib/*.c
 include include/*.h
+include README.md
