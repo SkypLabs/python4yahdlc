@@ -4,7 +4,7 @@ from setuptools import setup, Extension
 from os.path import dirname, abspath
 
 DIR = dirname(abspath(__file__))
-VERSION = '1.0.2'
+VERSION = '1.0.3'
 
 yahdlc = Extension(
 	'yahdlc',
