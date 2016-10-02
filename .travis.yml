@@ -15,5 +15,6 @@ deploy:
   on:
     tags: true
     repo: SkypLabs/python4yahdlc
+    condition: $TRAVIS_PYTHON_VERSION = "3.5"
 
 script: python setup.py test
