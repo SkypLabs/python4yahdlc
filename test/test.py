@@ -22,6 +22,14 @@ class TestYahdlc(unittest.TestCase):
         with self.assertRaises(MessageError):
             get_data('test')
 
+    def test_get_data_corrupted_frame(self):
+        data = bytearray(frame_data('test', FRAME_DATA, 0))
+        data[7] ^= 0x01
+        data = bytes(data)
+
+        with self.assertRaises(FCSError):
+            get_data(data)
+
     def test_encode_and_decode_frame(self):
         frame = frame_data('test')
         data, type, seq_no = get_data(frame)
