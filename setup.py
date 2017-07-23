@@ -5,7 +5,7 @@ from os.path import dirname, abspath, join
 from codecs import open
 
 DIR = dirname(abspath(__file__))
-VERSION = '1.0.4'
+VERSION = '1.1.0'
 
 yahdlc = Extension(
     'yahdlc',
