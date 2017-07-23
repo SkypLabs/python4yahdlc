@@ -1,18 +1,18 @@
 #include <Python.h>
 #include "yahdlc.h"
 
-#define MAX_FRAME_PAYLOAD		512
-#define HEADERS_LENGTH			8
+#define MAX_FRAME_PAYLOAD       512
+#define HEADERS_LENGTH          8
 
-#define TOTAL_FRAME_LENGTH		MAX_FRAME_PAYLOAD + HEADERS_LENGTH
+#define TOTAL_FRAME_LENGTH      MAX_FRAME_PAYLOAD + HEADERS_LENGTH
 
 static PyObject *Yahdlc_MessageError;
 static PyObject *Yahdlc_FCSError;
 
-/* ---------- yahdlc function ---------- */
+/* ---------- yahdlc functions ---------- */
 
 /*
- * Retrieves data from specified buffer containing the HDLC frame.
+ * Retrieves data from the specified buffer containing the HDLC frame.
  */
 static PyObject *get_data(PyObject *self, PyObject *args)
 {
@@ -33,7 +33,7 @@ static PyObject *get_data(PyObject *self, PyObject *args)
 
     ret = yahdlc_get_data(&control, frame_data, buf_length, recv_data, &recv_length);
 
-    /* If success */
+    /* If success. */
     if (ret >= 0)
     {
         PyObject *t;
@@ -70,8 +70,8 @@ static PyObject *get_data(PyObject *self, PyObject *args)
 }
 
 /*
- * Resets values used in yahdlc_get_data function
- * to keep track of received buffers.
+ * Resets the values used by the 'yahdlc_get_data' function
+ * to keep track of the received buffers.
  */
 static PyObject *get_data_reset(PyObject *self, PyObject *args)
 {
@@ -81,7 +81,7 @@ static PyObject *get_data_reset(PyObject *self, PyObject *args)
 }
 
 /*
- * Creates HDLC frame with specified data buffer.
+ * Creates an HDLC frame with the specified data buffer.
  */
 static PyObject *frame_data(PyObject *self, PyObject *args)
 {
@@ -114,7 +114,7 @@ static PyObject *frame_data(PyObject *self, PyObject *args)
     control.seq_no = seq_no;
     ret = yahdlc_frame_data(&control, send_data, data_length, frame_data, &frame_length);
 
-    /* If success */
+    /* If success. */
     if (ret == 0)
         return PyBytes_FromStringAndSize(frame_data, frame_length);
     else
@@ -127,12 +127,12 @@ static PyObject *frame_data(PyObject *self, PyObject *args)
 /* ---------- Settings ---------- */
 
 /*
-   Python module's methods.
-   */
+ * Python module's methods.
+ */
 static PyMethodDef YahdlcMethods[] = {
-    {"get_data", get_data, METH_VARARGS, "Retrieves data from specified buffer containing the HDLC frame"},
-    {"get_data_reset", get_data_reset, METH_VARARGS, "Resets values used in get_data method to keep track of received buffers"},
-    {"frame_data", frame_data, METH_VARARGS, "Creates HDLC frame with specified data buffer"},
+    {"get_data", get_data, METH_VARARGS, "Retrieves data from the specified buffer containing the HDLC frame."},
+    {"get_data_reset", get_data_reset, METH_VARARGS, "Resets the values used by the 'get_data' method to keep track of the received buffers."},
+    {"frame_data", frame_data, METH_VARARGS, "Creates an HDLC frame with the specified data buffer."},
     {NULL, NULL, 0, NULL}
 };
 
@@ -149,8 +149,8 @@ static struct PyModuleDef yahdlc_module =
 };
 
 /*
-   Python module initialization.
-   */
+ * Python module initialization.
+ */
 PyMODINIT_FUNC PyInit_yahdlc(void)
 {
     PyObject *m;
