@@ -55,9 +55,11 @@ static PyObject *get_data(PyObject *self, PyObject *args)
         PyErr_SetString(Yahdlc_MessageError, "invalid message");
         return NULL;
     }
+    /* If the FCS is not valid, we return the sequence number
+     * to be send back as NACK. */
     else if (ret == -EIO)
     {
-        PyErr_SetString(Yahdlc_FCSError, "invalid FCS");
+        PyErr_SetObject(Yahdlc_FCSError, PyLong_FromUnsignedLong(control.seq_no));
         return NULL;
     }
     else

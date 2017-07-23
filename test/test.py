@@ -28,7 +28,22 @@ class TestYahdlc(unittest.TestCase):
         data = bytes(data)
 
         with self.assertRaises(FCSError):
-            get_data(data)
+            try:
+                get_data(data)
+            except FCSError as e:
+                self.assertEqual(e.args[0], 0)
+                raise
+
+        data = bytearray(frame_data('test', FRAME_DATA, 2))
+        data[7] ^= 0x01
+        data = bytes(data)
+
+        with self.assertRaises(FCSError):
+            try:
+                get_data(data)
+            except FCSError as e:
+                self.assertEqual(e.args[0], 2)
+                raise
 
     def test_encode_and_decode_frame(self):
         frame = frame_data('test')
