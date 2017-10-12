@@ -11,7 +11,7 @@ Dependencies
 ============
 
 To build and make the Python module work, you need the following
-elements :
+elements:
 
 - Python 3
 - The `setuptools <https://pypi.python.org/pypi/setuptools>`__ package
@@ -52,7 +52,7 @@ From sources
 Usage
 =====
 
-To generate a new HDLC data frame :
+To generate a new HDLC data frame:
 
 ::
 
@@ -60,23 +60,23 @@ To generate a new HDLC data frame :
 
     frame = frame_data('hello world!')
 
-To generate a new HDLC ACK frame with a specific sequence number :
+To generate a new HDLC ``ACK`` frame with a specific sequence number:
 
 ::
 
     frame = frame_data('', FRAME_ACK, 3)
 
 The highest sequence number is 7 and the following frame types are
-available :
+available:
 
-- FRAME\_DATA
-- FRAME\_ACK
-- FRAME\_NACK
+- ``FRAME_DATA``
+- ``FRAME_ACK``
+- ``FRAME_NACK``
 
-Note that when you generate an ACK or NACK frame, the payload is
+Note that when you generate an ``ACK`` or ``NACK`` frame, the payload is
 useless.
 
-To decode a received HDLC frame :
+To decode a received HDLC frame:
 
 ::
 
