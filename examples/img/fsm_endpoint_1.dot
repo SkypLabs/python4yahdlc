@@ -1,0 +1,15 @@
+digraph finite_state_machine_1 {
+  rankdir=LR;
+  size="8,5"
+  node [shape = circle];
+
+  init -> send_data [ label = "connection_ok" ];
+  init -> init [ label = "connection_ko" ];
+  send_data -> wait_ack [ label = "send_ok" ];
+  wait_ack -> pause [ label = "ack_received" ];
+  wait_ack -> send_data [ label = "nack_received" ];
+  wait_ack -> pause [ label = "bad_frame_received"];
+  wait_ack -> send_data [ label = "timeout" ];
+  pause -> send_data [ label = "timeup" ];
+}
+

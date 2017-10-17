@@ -34,3 +34,18 @@ These two code examples need ``pyserial`` and ``fysom`` as dependencies:
 ::
 
     pip3 install pyserial fysom
+
+``fysom`` is used to define the Finite-State Machines (FSM) of the two endpoints.
+
+The sending FSM endpoint:
+
+|FSM Endpoint 1|
+
+The receiving FSM endpoint:
+
+|FSM Endpoint 2|
+
+.. |FSM Endpoint 1| image:: img/fsm_endpoint_1.png
+   :target: img/fsm_endpoint_1.png
+.. |FSM Endpoint 2| image:: img/fsm_endpoint_2.png
+   :target: img/fsm_endpoint_2.png
