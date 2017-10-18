@@ -2,7 +2,7 @@
 
 from setuptools import setup, Extension
 from os.path import dirname, abspath, join
-from codecs import open
+from codecs import open as fopen
 
 DIR = dirname(abspath(__file__))
 VERSION = '1.1.1'
@@ -19,7 +19,7 @@ yahdlc = Extension(
     ],
 )
 
-with open(join(DIR, 'README.rst'), encoding='utf-8') as f:
+with fopen(join(DIR, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(

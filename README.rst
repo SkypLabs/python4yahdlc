@@ -80,7 +80,7 @@ To decode a received HDLC frame:
 
 ::
 
-    data, type, seq_no = get_data(frame)
+    data, ftype, seq_no = get_data(frame)
 
 For a more advanced use, take a look at the examples available in the
 `examples <https://github.com/SkypLabs/python4yahdlc/tree/master/examples>`__

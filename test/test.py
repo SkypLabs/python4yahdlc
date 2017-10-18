@@ -47,10 +47,10 @@ class TestYahdlc(unittest.TestCase):
 
     def test_encode_and_decode_frame(self):
         frame = frame_data('test')
-        data, type, seq_no = get_data(frame)
+        data, ftype, seq_no = get_data(frame)
 
         self.assertEqual(b'test', data)
-        self.assertEqual(FRAME_DATA, type)
+        self.assertEqual(FRAME_DATA, ftype)
         self.assertEqual(0, seq_no)
 
     def test_decode_frame_with_1B_buffer(self):
@@ -58,12 +58,12 @@ class TestYahdlc(unittest.TestCase):
 
         for c in frame:
             try:
-                data, type, seq_no = get_data(frame)
+                data, ftype, seq_no = get_data(frame)
             except MessageError:
                 pass
 
         self.assertEqual(b'test', data)
-        self.assertEqual(FRAME_DATA, type)
+        self.assertEqual(FRAME_DATA, ftype)
         self.assertEqual(0, seq_no)
 
 if __name__ == '__main__':

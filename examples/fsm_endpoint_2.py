@@ -40,7 +40,7 @@ def wait_for_data(e):
 
 	while True:
 		try:
-			data, type, seq_no = get_data(ser.read(ser.inWaiting()))
+			data, ftype, seq_no = get_data(ser.read(ser.inWaiting()))
 			break
 		except MessageError:
 			pass
@@ -48,8 +48,8 @@ def wait_for_data(e):
 			stderr.write('[x] Bad FCS\n')
 			e.fsm.data_ko()
 
-	if type != FRAME_DATA:
-		stderr.write('[x] Bad frame type: {0}\n'.format(type))
+	if ftype != FRAME_DATA:
+		stderr.write('[x] Bad frame type: {0}\n'.format(ftype))
 		e.fsm.data_ko()
 	else:
 		stdout.write('[*] Data frame received\n')

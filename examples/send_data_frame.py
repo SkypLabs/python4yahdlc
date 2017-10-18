@@ -45,7 +45,7 @@ while True:
 	try:
 		# 200 µs
 		sleep(200 / 1000000.0)
-		data, type, seq_no = get_data(ser.read(ser.inWaiting()))
+		data, ftype, seq_no = get_data(ser.read(ser.inWaiting()))
 		signal.alarm(0)
 		break
 	except MessageError:
@@ -65,9 +65,9 @@ while True:
 		ser.close()
 		exit(0)
 
-if type != FRAME_ACK and type != FRAME_NACK:
-	stderr.write('[x] Bad frame type: {0}\n'.format(type))
-elif type == FRAME_ACK:
+if ftype != FRAME_ACK and ftype != FRAME_NACK:
+	stderr.write('[x] Bad frame type: {0}\n'.format(ftype))
+elif ftype == FRAME_ACK:
 	stdout.write('[*] ACK received\n')
 
 	if seq_no != 1:

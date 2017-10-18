@@ -55,7 +55,7 @@ def wait_for_ack(e):
 		try:
 			# 200 µs
 			sleep(200 / 1000000.0)
-			data, type, seq_no = get_data(ser.read(ser.inWaiting()))
+			data, ftype, seq_no = get_data(ser.read(ser.inWaiting()))
 			signal.alarm(0)
 			break
 		except MessageError:
@@ -64,10 +64,10 @@ def wait_for_ack(e):
 			stderr.write(str(err) + '\n')
 			e.fsm.timeout()
 
-	if type != FRAME_ACK and type != FRAME_NACK:
-		stderr.write('[x] Bad frame type: {0}\n'.format(type))
+	if ftype != FRAME_ACK and ftype != FRAME_NACK:
+		stderr.write('[x] Bad frame type: {0}\n'.format(ftype))
 		e.fsm.bad_frame_received()
-	elif type == FRAME_ACK:
+	elif ftype == FRAME_ACK:
 		stdout.write('[*] ACK received\n')
 
 		if seq_no != 1:

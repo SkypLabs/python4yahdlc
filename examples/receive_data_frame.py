@@ -34,7 +34,7 @@ while True:
 	try:
 		# 200 µs
 		sleep(200 / 1000000.0)
-		data, type, seq_no = get_data(ser.read(ser.inWaiting()))
+		data, ftype, seq_no = get_data(ser.read(ser.inWaiting()))
 		break
 	except MessageError:
 		pass
@@ -51,8 +51,8 @@ while True:
 
 frame_error = False
 
-if type != FRAME_DATA:
-	stderr.write('[x] Bad frame type: {0}\n'.format(type))
+if ftype != FRAME_DATA:
+	stderr.write('[x] Bad frame type: {0}\n'.format(ftype))
 	frame_error = True
 else:
 	stdout.write('[*] Data frame received\n')
