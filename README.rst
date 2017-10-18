@@ -2,7 +2,7 @@
 python4yahdlc
 =============
 
-|Build Status|
+|Build Status| |Code Coverage|
 
 python4yahdlc is a Python bindings for the
 `yahdlc <https://github.com/bang-olufsen/yahdlc>`__ library.
@@ -98,3 +98,5 @@ license.
 
 .. |Build Status| image:: https://travis-ci.org/SkypLabs/python4yahdlc.svg
    :target: https://travis-ci.org/SkypLabs/python4yahdlc
+.. |Code Coverage| image:: https://api.codacy.com/project/badge/Grade/313f8d5b98e04b24ae175e4fb5f6de8a
+   :target: https://www.codacy.com/app/skyper/python4yahdlc?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SkypLabs/python4yahdlc&amp;utm_campaign=Badge_Grade
