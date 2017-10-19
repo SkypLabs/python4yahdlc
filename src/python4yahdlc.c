@@ -104,7 +104,7 @@ static PyObject *frame_data(PyObject *self, PyObject *args)
         PyErr_SetString(PyExc_ValueError, "bad frame type");
         return NULL;
     }
-    else if (seq_no < 0 || seq_no > 7)
+    else if (seq_no > 7)
     {
         PyErr_SetString(PyExc_ValueError, "invalid sequence number");
         return NULL;
