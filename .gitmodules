@@ -1,0 +1,3 @@
+[submodule "yahdlc"]
+	path = yahdlc
+	url = https://github.com/bang-olufsen/yahdlc.git
