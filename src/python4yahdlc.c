@@ -11,7 +11,7 @@ static PyObject *Yahdlc_FCSError;
 
 /* ---------- yahdlc functions ---------- */
 
-/*
+/**
  * Retrieves data from the specified buffer containing the HDLC frame.
  */
 static PyObject *get_data(PyObject *self, PyObject *args)
@@ -33,7 +33,7 @@ static PyObject *get_data(PyObject *self, PyObject *args)
 
     ret = yahdlc_get_data(&control, frame_data, buf_length, recv_data, &recv_length);
 
-    /* If success. */
+    // If success.
     if (ret >= 0)
     {
         PyObject *t;
@@ -55,8 +55,8 @@ static PyObject *get_data(PyObject *self, PyObject *args)
         PyErr_SetString(Yahdlc_MessageError, "invalid message");
         return NULL;
     }
-    /* If the FCS is not valid, we return the sequence number
-     * to be send back as NACK. */
+    // If the FCS is not valid, we return the sequence number
+    // to be sent back as NACK.
     else if (ret == -EIO)
     {
         PyErr_SetObject(Yahdlc_FCSError, PyLong_FromUnsignedLong(control.seq_no));
@@ -69,7 +69,7 @@ static PyObject *get_data(PyObject *self, PyObject *args)
     }
 }
 
-/*
+/**
  * Resets the values used by the 'yahdlc_get_data' function
  * to keep track of the received buffers.
  */
@@ -80,7 +80,7 @@ static PyObject *get_data_reset(PyObject *self, PyObject *args)
     Py_RETURN_NONE;
 }
 
-/*
+/**
  * Creates an HDLC frame with the specified data buffer.
  */
 static PyObject *frame_data(PyObject *self, PyObject *args)
@@ -114,7 +114,7 @@ static PyObject *frame_data(PyObject *self, PyObject *args)
     control.seq_no = seq_no;
     ret = yahdlc_frame_data(&control, send_data, data_length, frame_data, &frame_length);
 
-    /* If success. */
+    // If success.
     if (ret == 0)
         return PyBytes_FromStringAndSize(frame_data, frame_length);
     else
@@ -126,7 +126,7 @@ static PyObject *frame_data(PyObject *self, PyObject *args)
 
 /* ---------- Settings ---------- */
 
-/*
+/**
  * Python module's methods.
  */
 static PyMethodDef YahdlcMethods[] = {
@@ -136,7 +136,7 @@ static PyMethodDef YahdlcMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-/*
+/**
  * Python module itself.
  */
 static struct PyModuleDef yahdlc_module =
@@ -148,8 +148,8 @@ static struct PyModuleDef yahdlc_module =
     YahdlcMethods
 };
 
-/*
- * Python module initialization.
+/**
+ * Initialises the Python module.
  */
 PyMODINIT_FUNC PyInit_yahdlc(void)
 {
