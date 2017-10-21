@@ -47,4 +47,5 @@ setup(
     ],
     ext_modules = [yahdlc],
     test_suite = 'test',
+    python_requires='>=3',
 )
