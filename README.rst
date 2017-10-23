@@ -10,25 +10,7 @@ python4yahdlc is a Python bindings for the
 Dependencies
 ============
 
-To build and make the Python module work, you need the following
-elements:
-
-- Python 3
-- The `setuptools <https://pypi.python.org/pypi/setuptools>`__ package
-
-On Fedora
----------
-
-::
-
-    yum install python3-setuptools
-
-On Debian
----------
-
-::
-
-    aptitude install python3-setuptools
+This software requires Python 3.
 
 Installation
 ============
@@ -48,6 +30,8 @@ From sources
     git clone https://github.com/SkypLabs/python4yahdlc.git
     cd python4yahdlc
     python3 setup.py install
+
+You need the `setuptools <https://pypi.python.org/pypi/setuptools>`_ package to execute ``setup.py``.
 
 Usage
 =====
@@ -85,6 +69,18 @@ To decode a received HDLC frame:
 For a more advanced use, take a look at the examples available in the
 `examples <https://github.com/SkypLabs/python4yahdlc/tree/master/examples>`__
 folder.
+
+Development
+===========
+
+Releasing a new version
+-----------------------
+
+* Run all tests and be sure they all pass
+* Update the ``VERSION`` variable in ``setup.py``
+* Update ``MANIFEST.in`` if needed
+* Update the package's metadata (description, classifiers, etc) in ``setup.py`` if needed
+* Update ``README.rst`` if needed
 
 License
 =======
