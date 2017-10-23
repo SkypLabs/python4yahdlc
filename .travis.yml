@@ -17,7 +17,7 @@ jobs:
       python: "3.6"
       deploy:
         provider: pypi
-        distributions: sdist
+        distributions: "sdist bdist_wheel"
         user: skyplabs
         password:
           secure: ZXpnzRdJT0/lc5ZdY7XiGVQKJyFj7tWnRMSLlRC2CMk/kXnh+dC9JVyYowrTtW6Au0QqW1MwitSqaUSbwbnYnPRADc70gzQi6QZ2Of0fuDd9LgMYPmLAGofavFtHNxp4/QWi/mDF44cW+oIJ8aRYxmF18Uq56QRc//AqDGuVzr05norl3aFFxDcir9Eh5VZs9gCEKcqojFkjcltRRHk4OyP2eog1JsLXT2vOPmbmXTXPMDFM4kLQRsg8yh1wijHR6zqNidD4vZmzldDbzDeEYmN2N/kc9OQ4biESqaHDxvnkh0k6kZn0bDhwehP0zVUWC9OJQNeRh6MY5AiLqlvf6DkiI9iSDO0ABPRIzHMC4N13t+nWOERSb6ZX4+G5qWfnEAD6KDrSc0kS14k8GRhQ5ISWXi/7s1XkF6d6QXptwX4B4lLq9WLC6NwP8jYFmFHHVqyquXseKSFo3zgWQdMxNEnaPpJsYkX4X+YO0+lPIMtVLKJnEi98Lu8c362o7AypSsLGY+X3xyECZ3r1TVcPsAWWCJ/5Oo0SzKuEh+dhG3HTYHNIcXuJUxyqV6GHImVdwzNirRt8vbyvz9iTIT14DR1+J76RKiXlO0XywUch4D2WBczpo4BG28mAP5oLNy3kPvrh8wL7NvXthY1T2AMo4jXOpjCP8IfMijMqoB6cNUI=
