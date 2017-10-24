@@ -29,6 +29,7 @@ From sources
 
     git clone https://github.com/SkypLabs/python4yahdlc.git
     cd python4yahdlc
+    git submodule update --init --recursive
     python3 setup.py install
 
 You need the `setuptools <https://pypi.python.org/pypi/setuptools>`_ package to execute ``setup.py``.
@@ -76,11 +77,17 @@ Development
 Releasing a new version
 -----------------------
 
+Before publishing the new release:
+
 * Run all tests and be sure they all pass
 * Update the ``VERSION`` variable in ``setup.py``
 * Update ``MANIFEST.in`` if needed
 * Update the package's metadata (description, classifiers, etc) in ``setup.py`` if needed
 * Update ``README.rst`` if needed
+
+After having pushed the changes:
+
+* Edit the release note on GitHub
 
 License
 =======
