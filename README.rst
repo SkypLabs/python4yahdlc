@@ -5,7 +5,7 @@ python4yahdlc
 |Build Status| |Code Coverage|
 
 python4yahdlc is a Python bindings for the
-`yahdlc <https://github.com/bang-olufsen/yahdlc>`__ library.
+`yahdlc <https://github.com/bang-olufsen/yahdlc>`__ library, allowing to encore and decode `HDLC <https://en.wikipedia.org/wiki/High-Level_Data_Link_Control>`__ frames using Python.
 
 Dependencies
 ============
@@ -20,7 +20,7 @@ With pip (recommanded)
 
 ::
 
-    pip3 install python4yahdlc
+    pip3 install --upgrade python4yahdlc
 
 From sources
 ------------
