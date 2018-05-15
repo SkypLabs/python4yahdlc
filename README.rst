@@ -4,8 +4,8 @@ python4yahdlc
 
 |PyPI Package| |Build Status| |Code Coverage|
 
-python4yahdlc is a Python bindings for the
-`yahdlc <https://github.com/bang-olufsen/yahdlc>`__ library, allowing to encore and decode `HDLC <https://en.wikipedia.org/wiki/High-Level_Data_Link_Control>`__ frames using Python.
+python4yahdlc is a Python binding of the
+`yahdlc <https://github.com/bang-olufsen/yahdlc>`__ library, allowing to encode and decode `HDLC <https://en.wikipedia.org/wiki/High-Level_Data_Link_Control>`__ frames.
 
 Dependencies
 ============
@@ -83,7 +83,7 @@ Before publishing the new release:
 * Update the ``VERSION`` variable in ``setup.py``
 * Update ``MANIFEST.in`` if needed
 * Update the package's metadata (description, classifiers, etc) in ``setup.py`` if needed
-* Update ``README.rst`` if needed
+* Update ``README.rst`` and ``examples/README.rst`` if needed
 
 After having pushed the changes:
 

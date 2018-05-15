@@ -24,7 +24,7 @@ These two code examples need ``pyserial`` as dependency:
 
 ::
 
-    pip3 install pyserial
+    pip3 install --upgrade pyserial
 
 ``fsm_endpoint_1.py`` and ``fsm_endpoint_2.py``
 ===============================================
@@ -33,7 +33,7 @@ These two code examples need ``pyserial`` and ``fysom`` as dependencies:
 
 ::
 
-    pip3 install pyserial fysom
+    pip3 install --upgrade pyserial fysom
 
 ``fysom`` is used to define the Finite-State Machines (FSM) of the two endpoints.
 

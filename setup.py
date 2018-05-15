@@ -25,10 +25,10 @@ with fopen(join(DIR, 'README.rst'), encoding='utf-8') as f:
 setup(
     name = 'python4yahdlc',
     version = VERSION,
-    description = 'Python bindings for the yahdlc library',
+    description = 'Python binding of the yahdlc library allowing to encode and decode HDLC frames',
     long_description = long_description,
     license = 'GPLv3',
-    keywords = 'hdlc yahdlc bindings',
+    keywords = 'hdlc yahdlc binding network',
     author = 'Paul-Emmanuel Raoul',
     author_email = 'skyper@skyplabs.net',
     url = 'https://github.com/SkypLabs/python4yahdlc',
