@@ -2,6 +2,8 @@ sudo: false
 
 language: python
 
+install:
+
 script: python setup.py test
 
 jobs:
