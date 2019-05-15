@@ -26,3 +26,7 @@ jobs:
         on:
           tags: true
           repo: SkypLabs/python4yahdlc
+
+notifications:
+  email:
+    on_success: never
