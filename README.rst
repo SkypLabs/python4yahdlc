@@ -2,7 +2,7 @@
 python4yahdlc
 =============
 
-|PyPI Package| |Build Status| |Code Coverage|
+|PyPI Package| |PyPI Downloads| |PyPI Python Versions| |Build Status Master Branch| |Build Status Develop Branch| |Code Coverage| |LGTM Grade| |LGTM Alerts|
 
 python4yahdlc is a Python binding of the
 `yahdlc <https://github.com/bang-olufsen/yahdlc>`__ library, allowing to encode and decode `HDLC <https://en.wikipedia.org/wiki/High-Level_Data_Link_Control>`__ frames.
@@ -99,9 +99,26 @@ under the
 `MIT <https://github.com/bang-olufsen/yahdlc/blob/master/LICENSE>`__
 license.
 
-.. |Build Status| image:: https://travis-ci.org/SkypLabs/python4yahdlc.svg
+.. |Build Status Master Branch| image:: https://img.shields.io/travis/SkypLabs/python4yahdlc/master.svg?label=master&logo=travis&style=flat
    :target: https://travis-ci.org/SkypLabs/python4yahdlc
+   :alt: Build Status Master Branch
+.. |Build Status Develop Branch| image:: https://img.shields.io/travis/SkypLabs/python4yahdlc/develop.svg?label=develop&logo=travis&style=flat
+   :target: https://travis-ci.org/SkypLabs/python4yahdlc
+   :alt: Build Status Develop Branch
 .. |Code Coverage| image:: https://api.codacy.com/project/badge/Grade/313f8d5b98e04b24ae175e4fb5f6de8a
    :target: https://www.codacy.com/app/skyper/python4yahdlc?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SkypLabs/python4yahdlc&amp;utm_campaign=Badge_Grade
-.. |PyPI Package| image:: https://badge.fury.io/py/python4yahdlc.svg
-   :target: https://badge.fury.io/py/python4yahdlc
+.. |LGTM Alerts| image:: https://img.shields.io/lgtm/alerts/g/SkypLabs/python4yahdlc.svg?logo=lgtm&logoWidth=18
+   :target: https://lgtm.com/projects/g/SkypLabs/python4yahdlc/alerts/
+   :alt: LGTM Alerts
+.. |LGTM Grade| image:: https://img.shields.io/lgtm/grade/python/g/SkypLabs/python4yahdlc.svg?logo=lgtm&logoWidth=18
+   :target: https://lgtm.com/projects/g/SkypLabs/python4yahdlc/context:python
+   :alt: LGTM Grade
+.. |PyPI Downloads| image:: https://img.shields.io/pypi/dm/python4yahdlc.svg?style=flat
+   :target: https://pypi.org/project/python4yahdlc/
+   :alt: PyPI Package Downloads Per Month
+.. |PyPI Package| image:: https://img.shields.io/pypi/v/python4yahdlc.svg?style=flat
+   :target: https://pypi.org/project/python4yahdlc/
+   :alt: PyPI Package Latest Release
+.. |PyPI Python Versions| image:: https://img.shields.io/pypi/pyversions/python4yahdlc.svg?logo=python&style=flat
+   :target: https://pypi.org/project/python4yahdlc/
+   :alt: PyPI Package Python Versions
