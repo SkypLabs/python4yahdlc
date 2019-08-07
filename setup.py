@@ -11,11 +11,11 @@ yahdlc = Extension(
     'yahdlc',
     sources = [
         DIR + '/src/python4yahdlc.c',
-        DIR + '/lib/fcs16.c',
-        DIR + '/lib/yahdlc.c'
+        DIR + '/yahdlc/C/fcs16.c',
+        DIR + '/yahdlc/C/yahdlc.c'
     ],
     include_dirs = [
-        DIR + '/include/'
+        DIR + '/yahdlc/C/'
     ],
 )
 
