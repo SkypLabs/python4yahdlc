@@ -1,0 +1,16 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 38b88246ccc552bffaaf54259d064beeee434539  # frozen: v4.0.1
+    hooks:
+      - id: check-ast
+      - id: check-executables-have-shebangs
+      - id: check-yaml
+      - id: trailing-whitespace
+  - repo: https://github.com/PyCQA/flake8
+    rev: dcd740bc0ebaf2b3d43e59a0060d157c97de13f3  # frozen: 3.9.2
+    hooks:
+      - id: flake8
+  - repo: https://github.com/PyCQA/pylint
+    rev: 591a23adcfdd2fe20b8cfdb9e4e07772c8f454f8  # frozen: v2.10.2
+    hooks:
+      - id: pylint
