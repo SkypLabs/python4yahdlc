@@ -2,7 +2,8 @@
 Examples' diagrams
 ==================
 
-The examples' diagrams have been generated using `Graphviz <http://www.graphviz.org/>`_:
+The examples' diagrams have been generated using `Graphviz
+<http://www.graphviz.org/>`_:
 
 ::
 
