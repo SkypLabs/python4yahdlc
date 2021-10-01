@@ -14,14 +14,14 @@ To create a virtual serial bus, you can use socat as followed:
 
     socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
-Then, edit `ser.port` variable as needed
+Then, edit `ser.port` variable as needed.
 """
 
 # pylint: disable=invalid-name
 
 import signal
 from sys import exit as sys_exit
-from sys import stderr, stdout
+from sys import stderr
 from time import sleep
 
 import serial
@@ -45,12 +45,12 @@ def serial_connection(e):
     Connect to the serial bus.
     """
 
-    stdout.write("[*] Connection...\n")
+    print("[*] Connection...")
 
     try:
         ser.open()
         e.fsm.connection_ok()
-    except serial.serialutil.SerialException as err:
+    except serial.SerialException as err:
         stderr.write(f"[x] Serial connection problem: {err}\n")
         e.fsm.connection_ko()
 
@@ -62,7 +62,7 @@ def retry_serial_connection():
     Wait 3 seconds.
     """
 
-    stdout.write("[*] Retry in 3 seconds...\n")
+    print("[*] Retry in 3 seconds...")
     sleep(3)
 
 
@@ -73,7 +73,7 @@ def send_data_frame(e):
     Send a test data frame.
     """
 
-    stdout.write("[*] Sending data frame...\n")
+    print("[*] Sending data frame...")
     ser.write(frame_data("test", FRAME_DATA, 0))
     e.fsm.send_ok()
 
@@ -86,9 +86,9 @@ def wait_for_ack(e):
     """
 
     def timeout_handler(signum, frame):
-        raise TimeoutError("[x] Timeout")
+        raise TimeoutError("Timeout")
 
-    stdout.write("[*] Waiting for (N)ACK...\n")
+    print("[*] Waiting for (N)ACK...")
 
     signal.signal(signal.SIGALRM, timeout_handler)
     # 1-second timeout
@@ -104,28 +104,28 @@ def wait_for_ack(e):
         except MessageError:
             pass
         except TimeoutError as err:
-            stderr.write(str(err) + "\n")
+            stderr.write("[x] " + str(err) + "\n")
             e.fsm.timeout()
 
     if ftype not in (FRAME_ACK, FRAME_NACK):
         stderr.write(f"[x] Bad frame type: {ftype}\n")
         e.fsm.bad_frame_received()
     elif ftype == FRAME_ACK:
-        stdout.write("[*] ACK received\n")
+        print("[*] ACK received")
 
         if seq_no != 1:
             stderr.write(f"[x] Bad sequence number: {seq_no}\n")
         else:
-            stdout.write("[*] Sequence number OK\n")
+            print("[*] Sequence number OK")
 
         e.fsm.ack_received()
     else:
-        stdout.write("[*] NACK received\n")
+        print("[*] NACK received")
 
         if seq_no != 0:
             stderr.write("[x] Bad sequence number: {seq_no}\n")
         else:
-            stdout.write("[*] Sequence number OK\n")
+            print("[*] Sequence number OK")
 
         e.fsm.nack_received()
 
@@ -139,33 +139,37 @@ def pause(e):
     e.fsm.timesup()
 
 
-try:
-    fsm = Fysom({
-        "initial": "init",
-        "events": [
-            {"name": "connection_ok", "src": "init", "dst": "send_data"},
-            {"name": "connection_ko", "src": "init", "dst": "init"},
-            {"name": "send_ok", "src": "send_data", "dst": "wait_ack"},
-            {"name": "ack_received", "src": "wait_ack", "dst": "pause"},
-            {"name": "nack_received", "src": "wait_ack", "dst": "send_data"},
-            {"name": "bad_frame_received", "src": "wait_ack", "dst": "pause"},
-            {"name": "timeout", "src": "wait_ack", "dst": "send_data"},
-            {"name": "timesup", "src": "pause", "dst": "send_data"},
-        ],
-        "callbacks": {
-            "oninit": serial_connection,
-            "onreenterinit": retry_serial_connection,
-            "onconnection_ko": serial_connection,
-            "onconnection_ok": send_data_frame,
-            "onsend_ok": wait_for_ack,
-            "onack_received": pause,
-            "onnack_received": send_data_frame,
-            "onbad_frame_received": pause,
-            "ontimeout": send_data_frame,
-            "ontimesup": send_data_frame,
-        },
-    })
-except KeyboardInterrupt:
-    stdout.write("[*] Bye!\n")
-    ser.close()
-    sys_exit(0)
+if __name__ == "__main__":
+    try:
+        fsm = Fysom({
+            "initial": "init",
+            "events": [
+                {"name": "connection_ok", "src": "init", "dst": "send_data"},
+                {"name": "connection_ko", "src": "init", "dst": "init"},
+                {"name": "send_ok", "src": "send_data", "dst": "wait_ack"},
+                {"name": "ack_received", "src": "wait_ack", "dst": "pause"},
+                {"name": "nack_received", "src": "wait_ack", "dst":
+                    "send_data"},
+                {"name": "bad_frame_received", "src": "wait_ack", "dst":
+                    "pause"},
+                {"name": "timeout", "src": "wait_ack", "dst": "send_data"},
+                {"name": "timesup", "src": "pause", "dst": "send_data"},
+            ],
+            "callbacks": {
+                "oninit": serial_connection,
+                "onreenterinit": retry_serial_connection,
+                "onconnection_ko": serial_connection,
+                "onconnection_ok": send_data_frame,
+                "onsend_ok": wait_for_ack,
+                "onack_received": pause,
+                "onnack_received": send_data_frame,
+                "onbad_frame_received": pause,
+                "ontimeout": send_data_frame,
+                "ontimesup": send_data_frame,
+            },
+        })
+    except KeyboardInterrupt:
+        print("[*] Bye!")
+        sys_exit(0)
+    finally:
+        ser.close()

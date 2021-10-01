@@ -14,13 +14,13 @@ To create a virtual serial bus, you can use socat as followed:
 
     socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
-Then, edit `ser.port` variable as needed
+Then, edit `ser.port` variable as needed.
 """
 
 # pylint: disable=invalid-name
 
 from sys import exit as sys_exit
-from sys import stderr, stdout
+from sys import stderr
 from time import sleep
 
 import serial
@@ -44,12 +44,12 @@ def serial_connection(e):
     Connect to the serial bus.
     """
 
-    stdout.write("[*] Connection...\n")
+    print("[*] Connection...")
 
     try:
         ser.open()
         e.fsm.connection_ok()
-    except serial.serialutil.SerialException as err:
+    except serial.SerialException as err:
         stderr.write(f"[x] Serial connection problem: {err}\n")
         e.fsm.connection_ko()
 
@@ -61,7 +61,7 @@ def retry_serial_connection():
     Wait 3 seconds.
     """
 
-    stdout.write("[*] Retry in 3 seconds...\n")
+    print("[*] Retry in 3 seconds...")
     sleep(3)
 
 
@@ -72,7 +72,7 @@ def wait_for_data(e):
     For wait an incoming data frame and trigger the appropriate transition.
     """
 
-    stdout.write("[*] Waiting for data...\n")
+    print("[*] Waiting for data...")
 
     while True:
         try:
@@ -88,12 +88,12 @@ def wait_for_data(e):
         stderr.write(f"[x] Bad frame type: {ftype}\n")
         e.fsm.data_ko()
     else:
-        stdout.write("[*] Data frame received\n")
+        print("[*] Data frame received")
 
         if seq_no != 0:
             stderr.write(f"[x] Bad sequence number: {seq_no}\n")
         else:
-            stdout.write("[*] Sequence number OK\n")
+            print("[*] Sequence number OK")
 
         e.fsm.data_ok()
 
@@ -103,7 +103,7 @@ def send_ack_frame(e):
     Send ACK frame state.
     """
 
-    stdout.write("[*] Sending ACK...\n")
+    print("[*] Sending ACK...")
     ser.write(frame_data("", FRAME_ACK, 1))
     e.fsm.ack_sent()
 
@@ -113,34 +113,36 @@ def send_nack_frame(e):
     Send NACK frame state.
     """
 
-    stdout.write("[*] Sending NACK...\n")
+    print("[*] Sending NACK...")
     ser.write(frame_data("", FRAME_NACK, 0))
     e.fsm.nack_sent()
 
 
-try:
-    fsm = Fysom({
-        "initial": "init",
-        "events": [
-            {"name": "connection_ok", "src": "init", "dst": "wait_data"},
-            {"name": "connection_ko", "src": "init", "dst": "init"},
-            {"name": "data_ok", "src": "wait_data", "dst": "send_ack"},
-            {"name": "data_ko", "src": "wait_data", "dst": "send_nack"},
-            {"name": "ack_sent", "src": "send_ack", "dst": "wait_data"},
-            {"name": "nack_sent", "src": "send_nack", "dst": "wait_data"},
-        ],
-        "callbacks": {
-            "oninit": serial_connection,
-            "onreenterinit": retry_serial_connection,
-            "onconnection_ok": wait_for_data,
-            "onconnection_ko": serial_connection,
-            "ondata_ok": send_ack_frame,
-            "ondata_ko": send_nack_frame,
-            "onack_sent": wait_for_data,
-            "onnack_sent": wait_for_data,
-        },
-    })
-except KeyboardInterrupt:
-    stdout.write("[*] Bye!\n")
-    ser.close()
-    sys_exit(0)
+if __name__ == "__main__":
+    try:
+        fsm = Fysom({
+            "initial": "init",
+            "events": [
+                {"name": "connection_ok", "src": "init", "dst": "wait_data"},
+                {"name": "connection_ko", "src": "init", "dst": "init"},
+                {"name": "data_ok", "src": "wait_data", "dst": "send_ack"},
+                {"name": "data_ko", "src": "wait_data", "dst": "send_nack"},
+                {"name": "ack_sent", "src": "send_ack", "dst": "wait_data"},
+                {"name": "nack_sent", "src": "send_nack", "dst": "wait_data"},
+            ],
+            "callbacks": {
+                "oninit": serial_connection,
+                "onreenterinit": retry_serial_connection,
+                "onconnection_ok": wait_for_data,
+                "onconnection_ko": serial_connection,
+                "ondata_ok": send_ack_frame,
+                "ondata_ko": send_nack_frame,
+                "onack_sent": wait_for_data,
+                "onnack_sent": wait_for_data,
+            },
+        })
+    except KeyboardInterrupt:
+        print("[*] Bye!")
+        sys_exit(0)
+    finally:
+        ser.close()

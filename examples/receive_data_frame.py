@@ -18,7 +18,7 @@ Then, edit `ser.port` variable as needed
 """
 
 from sys import exit as sys_exit
-from sys import stderr, stdout
+from sys import stderr
 from time import sleep
 
 import serial
@@ -33,15 +33,15 @@ ser.port = "/dev/pts/6"
 ser.baudrate = 9600
 ser.timeout = 0
 
-stdout.write("[*] Connection...\n")
+print("[*] Connection...")
 
 try:
     ser.open()
-except serial.serialutil.SerialException as err:
+except serial.SerialException as err:
     stderr.write(f"[x] Serial connection problem: {err}\n")
     sys_exit(1)
 
-stdout.write("[*] Waiting for data...\n")
+print("[*] Waiting for data...")
 
 while True:
     try:
@@ -53,13 +53,13 @@ while True:
         pass
     except FCSError:
         stderr.write("[x] Bad FCS\n")
-        stdout.write("[*] Sending NACK...\n")
+        print("[*] Sending NACK...")
         ser.write(frame_data("", FRAME_NACK, 0))
         ser.close()
         sys_exit(0)
     except KeyboardInterrupt:
         ser.close()
-        stdout.write("[*] Bye!\n")
+        print("[*] Bye!")
         sys_exit(0)
 
 FRAME_ERROR = False
@@ -68,20 +68,20 @@ if ftype != FRAME_DATA:
     stderr.write(f"[x] Bad frame type: {ftype}\n")
     FRAME_ERROR = True
 else:
-    stdout.write("[*] Data frame received\n")
+    print("[*] Data frame received")
 
 if seq_no != 0:
     stderr.write(f"[x] Bad sequence number: {seq_no}\n")
     FRAME_ERROR = True
 else:
-    stdout.write("[*] Sequence number OK\n")
+    print("[*] Sequence number OK")
 
 if FRAME_ERROR is False:
-    stdout.write("[*] Sending ACK ...\n")
+    print("[*] Sending ACK ...")
     ser.write(frame_data("", FRAME_ACK, 1))
 else:
-    stdout.write("[*] Sending NACK ...\n")
+    print("[*] Sending NACK ...")
     ser.write(frame_data("", FRAME_NACK, 0))
 
-stdout.write("[*] Done\n")
+print("[*] Done")
 ser.close()
