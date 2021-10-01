@@ -2,7 +2,7 @@
 Examples
 ========
 
-This folder contains several code examples of the use of `python4yahdlc
+This folder contains several code examples of how to use `python4yahdlc
 <https://github.com/SkypLabs/python4yahdlc>`_.
 
 The code examples work in pairs: `send_data_frame.py
@@ -19,16 +19,16 @@ Setting up a virtual serial bus
 
 To make the two code examples of each pair work together, you need a serial bus
 of communication. The easiest way to set up a serial bus is to use a virtual
-one. `socat <http://nc110.sourceforge.net/>`_ is a great tool for carrying out
-this task:
+one. `socat <http://www.dest-unreach.org/socat/>`_ is a great tool for carrying
+out this task:
 
 ::
 
-    socat -d -d socat -d -d pty,raw,echo=0 pty,raw,echo=0
+    socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
-This command will create two virtual devices such as ``/dev/pts/5`` and
-``/dev/pts/6``. Everything you write in ``/dev/pts/5`` will be echoed in
-``/dev/pts/6`` and vice versa.
+This command will create two virtual devices (e.g. ``/dev/pts/5`` and
+``/dev/pts/6``). Everything you write in one will be echoed in the other and
+vice versa.
 
 ``send_data_frame.py`` and ``receive_data_frame.py``
 ====================================================
