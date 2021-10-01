@@ -67,10 +67,14 @@ setup(
     ext_modules=[yahdlc],
     python_requires=">=3.6, <4",
     extras_require={
+        "examples": [
+            "fysom",
+            "pyserial",
+        ],
         "tests": [
             "flake8",
             "pylint",
-            "tox"
+            "tox",
         ],
     },
 )
