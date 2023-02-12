@@ -27,8 +27,15 @@ import serial
 from fysom import Fysom
 
 # pylint: disable=no-name-in-module
-from yahdlc import (FRAME_ACK, FRAME_DATA, FRAME_NACK, FCSError, MessageError,
-                    frame_data, get_data)
+from yahdlc import (
+    FRAME_ACK,
+    FRAME_DATA,
+    FRAME_NACK,
+    FCSError,
+    MessageError,
+    frame_data,
+    get_data,
+)
 
 # Serial port configuration
 ser = serial.Serial()
@@ -120,27 +127,29 @@ def send_nack_frame(e):
 
 if __name__ == "__main__":
     try:
-        fsm = Fysom({
-            "initial": "init",
-            "events": [
-                {"name": "connection_ok", "src": "init", "dst": "wait_data"},
-                {"name": "connection_ko", "src": "init", "dst": "init"},
-                {"name": "data_ok", "src": "wait_data", "dst": "send_ack"},
-                {"name": "data_ko", "src": "wait_data", "dst": "send_nack"},
-                {"name": "ack_sent", "src": "send_ack", "dst": "wait_data"},
-                {"name": "nack_sent", "src": "send_nack", "dst": "wait_data"},
-            ],
-            "callbacks": {
-                "oninit": serial_connection,
-                "onreenterinit": retry_serial_connection,
-                "onconnection_ok": wait_for_data,
-                "onconnection_ko": serial_connection,
-                "ondata_ok": send_ack_frame,
-                "ondata_ko": send_nack_frame,
-                "onack_sent": wait_for_data,
-                "onnack_sent": wait_for_data,
-            },
-        })
+        fsm = Fysom(
+            {
+                "initial": "init",
+                "events": [
+                    {"name": "connection_ok", "src": "init", "dst": "wait_data"},
+                    {"name": "connection_ko", "src": "init", "dst": "init"},
+                    {"name": "data_ok", "src": "wait_data", "dst": "send_ack"},
+                    {"name": "data_ko", "src": "wait_data", "dst": "send_nack"},
+                    {"name": "ack_sent", "src": "send_ack", "dst": "wait_data"},
+                    {"name": "nack_sent", "src": "send_nack", "dst": "wait_data"},
+                ],
+                "callbacks": {
+                    "oninit": serial_connection,
+                    "onreenterinit": retry_serial_connection,
+                    "onconnection_ok": wait_for_data,
+                    "onconnection_ko": serial_connection,
+                    "ondata_ok": send_ack_frame,
+                    "ondata_ko": send_nack_frame,
+                    "onack_sent": wait_for_data,
+                    "onnack_sent": wait_for_data,
+                },
+            }
+        )
     except KeyboardInterrupt:
         print("[*] Bye!")
         sys_exit(0)
