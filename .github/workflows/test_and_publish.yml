@@ -59,7 +59,7 @@ jobs:
       - test-code
     if: |
       needs.is-duplicate.outputs.should_skip != 'true' &&
-      github.ref == 'refs/heads/master' &&
+      github.ref == 'refs/heads/main' &&
       github.event_name == 'push'
 
     steps:
@@ -93,7 +93,7 @@ jobs:
       - publish-to-test-pypi
     if: |
       needs.is-duplicate.outputs.should_skip != 'true' &&
-      github.ref == 'refs/heads/master' &&
+      github.ref == 'refs/heads/main' &&
       github.event_name == 'push'
 
     steps:
