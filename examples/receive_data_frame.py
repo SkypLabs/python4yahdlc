@@ -24,8 +24,15 @@ from time import sleep
 import serial
 
 # pylint: disable=no-name-in-module
-from yahdlc import (FRAME_ACK, FRAME_DATA, FRAME_NACK, FCSError, MessageError,
-                    frame_data, get_data)
+from yahdlc import (
+    FRAME_ACK,
+    FRAME_DATA,
+    FRAME_NACK,
+    FCSError,
+    MessageError,
+    frame_data,
+    get_data,
+)
 
 # Serial port configuration
 ser = serial.Serial()

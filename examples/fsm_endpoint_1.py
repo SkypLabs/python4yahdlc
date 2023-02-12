@@ -28,8 +28,7 @@ import serial
 from fysom import Fysom
 
 # pylint: disable=no-name-in-module
-from yahdlc import (FRAME_ACK, FRAME_DATA, FRAME_NACK, MessageError,
-                    frame_data, get_data)
+from yahdlc import FRAME_ACK, FRAME_DATA, FRAME_NACK, MessageError, frame_data, get_data
 
 # Serial port configuration.
 ser = serial.Serial()
@@ -141,33 +140,33 @@ def pause(e):
 
 if __name__ == "__main__":
     try:
-        fsm = Fysom({
-            "initial": "init",
-            "events": [
-                {"name": "connection_ok", "src": "init", "dst": "send_data"},
-                {"name": "connection_ko", "src": "init", "dst": "init"},
-                {"name": "send_ok", "src": "send_data", "dst": "wait_ack"},
-                {"name": "ack_received", "src": "wait_ack", "dst": "pause"},
-                {"name": "nack_received", "src": "wait_ack", "dst":
-                    "send_data"},
-                {"name": "bad_frame_received", "src": "wait_ack", "dst":
-                    "pause"},
-                {"name": "timeout", "src": "wait_ack", "dst": "send_data"},
-                {"name": "timesup", "src": "pause", "dst": "send_data"},
-            ],
-            "callbacks": {
-                "oninit": serial_connection,
-                "onreenterinit": retry_serial_connection,
-                "onconnection_ko": serial_connection,
-                "onconnection_ok": send_data_frame,
-                "onsend_ok": wait_for_ack,
-                "onack_received": pause,
-                "onnack_received": send_data_frame,
-                "onbad_frame_received": pause,
-                "ontimeout": send_data_frame,
-                "ontimesup": send_data_frame,
-            },
-        })
+        fsm = Fysom(
+            {
+                "initial": "init",
+                "events": [
+                    {"name": "connection_ok", "src": "init", "dst": "send_data"},
+                    {"name": "connection_ko", "src": "init", "dst": "init"},
+                    {"name": "send_ok", "src": "send_data", "dst": "wait_ack"},
+                    {"name": "ack_received", "src": "wait_ack", "dst": "pause"},
+                    {"name": "nack_received", "src": "wait_ack", "dst": "send_data"},
+                    {"name": "bad_frame_received", "src": "wait_ack", "dst": "pause"},
+                    {"name": "timeout", "src": "wait_ack", "dst": "send_data"},
+                    {"name": "timesup", "src": "pause", "dst": "send_data"},
+                ],
+                "callbacks": {
+                    "oninit": serial_connection,
+                    "onreenterinit": retry_serial_connection,
+                    "onconnection_ko": serial_connection,
+                    "onconnection_ok": send_data_frame,
+                    "onsend_ok": wait_for_ack,
+                    "onack_received": pause,
+                    "onnack_received": send_data_frame,
+                    "onbad_frame_received": pause,
+                    "ontimeout": send_data_frame,
+                    "ontimesup": send_data_frame,
+                },
+            }
+        )
     except KeyboardInterrupt:
         print("[*] Bye!")
         sys_exit(0)
