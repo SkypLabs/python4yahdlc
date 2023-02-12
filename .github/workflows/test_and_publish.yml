@@ -21,7 +21,7 @@ jobs:
         name: Skip Check
         uses: fkirc/skip-duplicate-actions@master
         with:
-          paths_ignore: '["**/README.md"]'
+          paths_ignore: '["**.rst", "**.md", "**.txt"]'
 
   test-code:
     name: Test code
