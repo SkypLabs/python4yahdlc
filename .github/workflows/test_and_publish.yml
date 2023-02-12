@@ -28,7 +28,7 @@ jobs:
     if: ${{ needs.is-duplicate.outputs.should_skip != 'true' }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, macos-10.15, windows-2019]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.7, 3.8, 3.9]
 
     steps:
@@ -54,7 +54,7 @@ jobs:
   publish-to-test-pypi:
     name: Publish to TestPyPI
     environment: staging
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - is-duplicate
       - test-code
@@ -88,7 +88,7 @@ jobs:
   publish-to-pypi:
     name: Publish to PyPI
     environment: production
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - is-duplicate
       - publish-to-test-pypi
