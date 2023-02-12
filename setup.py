@@ -13,7 +13,7 @@ setup(
       name="yahdlc",
       sources=[
         "src/python4yahdlc.c",
-        "yahdlc/C/fcs16.c",
+        "yahdlc/C/fcs.c",
         "yahdlc/C/yahdlc.c",
       ],
       include_dirs=[
