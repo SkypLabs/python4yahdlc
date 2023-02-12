@@ -1,5 +1,6 @@
-include src/*.c
-include lib/*.c
-include include/*.h
-include README.rst
-include LICENSE.txt
+# See https://packaging.python.org/en/latest/guides/using-manifest-in/ for
+# further information on this file.
+
+include yahdlc/C/*.h
+
+global-exclude *~ *.sw[op] *.py[cod] *.so
