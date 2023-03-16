@@ -6,7 +6,7 @@ This script needs some external modules. To install them:
 
 ::
 
-    pip3 install python4yahdlc[examples]
+    pip install python4yahdlc[examples]
 
 To create a virtual serial bus, you can use socat as followed:
 
