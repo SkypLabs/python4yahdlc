@@ -1,0 +1,121 @@
+name: Test and Publish
+
+on:
+  push:
+
+  pull_request:
+    branches: [ 'develop' ]
+
+jobs:
+  is-duplicate:
+    name: Is Duplicate
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip-check.outputs.should_skip }}
+    permissions:
+      actions: write
+      contents: read
+
+    steps:
+      - id: skip-check
+        name: Skip Check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          paths_ignore: '["**.rst", "**.md", "**.txt"]'
+
+  test-code:
+    name: Test code
+    runs-on: ${{ matrix.os }}
+    needs: is-duplicate
+    if: ${{ needs.is-duplicate.outputs.should_skip != 'true' }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4.5.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+
+      - name: Test with Tox
+        run: tox
+
+  publish-to-test-pypi:
+    name: Publish to TestPyPI
+    environment: staging
+    runs-on: ubuntu-latest
+    needs:
+      - is-duplicate
+      - test-code
+    if: |
+      needs.is-duplicate.outputs.should_skip != 'true' &&
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push'
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.5.0
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+
+      - name: Build and publish
+        env:
+          TWINE_USERNAME: '__token__'
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python setup.py sdist bdist_wheel
+          twine upload --repository testpypi dist/*
+
+  publish-to-pypi:
+    name: Publish to PyPI
+    environment: production
+    runs-on: ubuntu-latest
+    needs:
+      - is-duplicate
+      - publish-to-test-pypi
+    if: |
+      needs.is-duplicate.outputs.should_skip != 'true' &&
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push'
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.5.0
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+
+      - name: Build and publish
+        env:
+          TWINE_USERNAME: '__token__'
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python setup.py sdist bdist_wheel
+          twine upload dist/*

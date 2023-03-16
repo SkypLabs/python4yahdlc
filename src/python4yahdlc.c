@@ -1,3 +1,4 @@
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include "yahdlc.h"
 
@@ -162,11 +163,21 @@ PyMODINIT_FUNC PyInit_yahdlc(void)
 
     Yahdlc_MessageError = PyErr_NewException("yahdlc.MessageError", NULL, NULL);
     Py_INCREF(Yahdlc_MessageError);
-    PyModule_AddObject(m, "MessageError", Yahdlc_MessageError);
+    if (PyModule_AddObject(m, "MessageError", Yahdlc_MessageError) < 0) {
+      Py_XDECREF(Yahdlc_MessageError);
+      Py_CLEAR(Yahdlc_MessageError);
+      Py_DECREF(m);
+      return NULL;
+    }
 
     Yahdlc_FCSError = PyErr_NewException("yahdlc.FCSError", NULL, NULL);
     Py_INCREF(Yahdlc_FCSError);
-    PyModule_AddObject(m, "FCSError", Yahdlc_FCSError);
+    if (PyModule_AddObject(m, "FCSError", Yahdlc_FCSError) < 0) {
+      Py_XDECREF(Yahdlc_FCSError);
+      Py_CLEAR(Yahdlc_FCSError);
+      Py_DECREF(m);
+      return NULL;
+    }
 
     PyModule_AddIntConstant(m, "FRAME_DATA", YAHDLC_FRAME_DATA);
     PyModule_AddIntConstant(m, "FRAME_ACK", YAHDLC_FRAME_ACK);

@@ -1,74 +1,94 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# This script needs some external modules.
-# To install them:
-# pip3 install pyserial
+"""
+This script needs some external modules. To install them:
 
-# To create a virtual serial bus, you can use socat as followed:
-# socat -d -d pty,raw,echo=0 pty,raw,echo=0
-# Then, edit ser.port variable as needed
+::
+
+    pip install python4yahdlc[examples]
+
+To create a virtual serial bus, you can use socat as followed:
+
+::
+
+    socat -d -d pty,raw,echo=0 pty,raw,echo=0
+
+Then, edit `ser.port` variable as needed
+"""
+
+from sys import exit as sys_exit
+from sys import stderr
+from time import sleep
 
 import serial
-from yahdlc import *
-from sys import stdout, stderr
-from time import sleep
+
+# pylint: disable=no-name-in-module
+from yahdlc import (
+    FRAME_ACK,
+    FRAME_DATA,
+    FRAME_NACK,
+    FCSError,
+    MessageError,
+    frame_data,
+    get_data,
+)
 
 # Serial port configuration
 ser = serial.Serial()
-ser.port = '/dev/pts/6'
+ser.port = "/dev/pts/6"
 ser.baudrate = 9600
 ser.timeout = 0
 
-stdout.write('[*] Connection ...\n')
+print("[*] Connection...")
 
 try:
-	ser.open()
-except serial.serialutil.SerialException as e:
-	stderr.write('[x] Serial connection problem : {0}\n'.format(e))
-	exit(1)
+    ser.open()
+except serial.SerialException as err:
+    stderr.write(f"[x] Serial connection problem: {err}\n")
+    sys_exit(1)
 
-stdout.write('[*] Waiting for data ...\n')
+print("[*] Waiting for data...")
 
 while True:
-	try:
-		# 200 µs
-		sleep(200 / 1000000.0)
-		data, ftype, seq_no = get_data(ser.read(ser.inWaiting()))
-		break
-	except MessageError:
-		pass
-	except FCSError:
-		stderr.write('[x] Bad FCS\n')
-		stdout.write('[*] Sending NACK ...\n')
-		ser.write(frame_data('', FRAME_NACK, 0))
-		ser.close()
-		exit(0)
-	except KeyboardInterrupt:
-		ser.close()
-		stdout.write('[*] Bye !\n')
-		exit(0)
+    try:
+        # 200 µs
+        sleep(200 / 1000000.0)
+        data, ftype, seq_no = get_data(ser.read(ser.inWaiting()))
+        break
+    except MessageError:
+        pass
+    except FCSError:
+        stderr.write("[x] Bad FCS\n")
+        print("[*] Sending NACK...")
+        ser.write(frame_data("", FRAME_NACK, 0))
+        ser.close()
+        sys_exit(0)
+    except KeyboardInterrupt:
+        ser.close()
+        print("[*] Bye!")
+        sys_exit(0)
 
-frame_error = False
+FRAME_ERROR = False
 
 if ftype != FRAME_DATA:
-	stderr.write('[x] Bad frame type: {0}\n'.format(ftype))
-	frame_error = True
+    stderr.write(f"[x] Bad frame type: {ftype}\n")
+    FRAME_ERROR = True
 else:
-	stdout.write('[*] Data frame received\n')
+    print("[*] Data frame received")
 
 if seq_no != 0:
-	stderr.write('[x] Bad sequence number: {0}\n'.format(seq_no))
-	frame_error = True
+    stderr.write(f"[x] Bad sequence number: {seq_no}\n")
+    FRAME_ERROR = True
 else:
-	stdout.write('[*] Sequence number OK\n')
+    print("[*] Sequence number OK")
 
-if frame_error == False:
-	stdout.write('[*] Sending ACK ...\n')
-	ser.write(frame_data('', FRAME_ACK, 1))
+if FRAME_ERROR is False:
+    print("[*] Sending ACK ...")
+    ser.write(frame_data("", FRAME_ACK, 1))
 else:
-	stdout.write('[*] Sending NACK ...\n')
-	ser.write(frame_data('', FRAME_NACK, 0))
+    print("[*] Sending NACK ...")
+    ser.write(frame_data("", FRAME_NACK, 0))
 
-stdout.write('[*] Done\n')
+print("[*] Done")
 ser.close()
