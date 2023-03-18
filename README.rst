@@ -18,7 +18,7 @@ Installation
 ============
 
 From PyPI (recommended)
-----------------------
+-----------------------
 
 .. code:: sh
 
