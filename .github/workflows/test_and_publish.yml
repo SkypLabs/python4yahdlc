@@ -27,7 +27,7 @@ jobs:
     name: Test code
     runs-on: ${{ matrix.os }}
     needs: is-duplicate
-    if: ${{ needs.is-duplicate.outputs.should_skip != 'true' }}
+    if: needs.is-duplicate.outputs.should_skip != 'true'
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -52,11 +52,16 @@ jobs:
       - name: Test with Tox
         run: tox
 
-  test-dist:
-    name: Test distribution
-    runs-on: ubuntu-latest
+  build-wheels:
+    name: Build wheels
+    runs-on: ${{ matrix.os }}
     needs: is-duplicate
-    if: ${{ needs.is-duplicate.outputs.should_skip != 'true' }}
+    if: |
+      needs.is-duplicate.outputs.should_skip != 'true' &&
+      startsWith(github.ref, 'refs/heads/develop')
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - name: Check out code
@@ -64,53 +69,63 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up Python
-        uses: actions/setup-python@v4.5.0
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.12.3
+
+      - name: Upload artefacts to GitHub
+        uses: actions/upload-artifact@v3
         with:
-          python-version: '3.x'
+          name: dist-packages
+          path: wheelhouse/*.whl
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade build twine
+  build-sdist:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+    needs: is-duplicate
+    if: |
+      needs.is-duplicate.outputs.should_skip != 'true' &&
+      startsWith(github.ref, 'refs/heads/develop')
 
-      - name: Build and test with Twine
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Build sdist
         run: |
-          python -m build
-          twine check dist/*
+          pipx run build --sdist
+          pipx run twine check dist/*
+
+      - name: Upload artefacts to GitHub
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-packages
+          path: dist/*.tar.gz
 
   publish-to-test-pypi:
     name: Publish to TestPyPI
     environment: staging
     runs-on: ubuntu-latest
-    needs: [test-code]
+    needs: [test-code, build-sdist, build-wheels]
     if: |
       !failure() &&
-      startsWith(github.ref, 'refs/tags/')
+      github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/tags/v')
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: Download artefacts
+        uses: actions/download-artifact@v3
         with:
-          submodules: recursive
+          name: dist-packages
+          path: dist
 
-      - name: Set up Python
-        uses: actions/setup-python@v4.5.0
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@v1.8.5
         with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade build twine
-
-      - name: Build and publish
-        env:
-          TWINE_USERNAME: '__token__'
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          python -m build
-          twine upload --repository testpypi dist/*
+          repository-url: https://test.pypi.org/legacy/
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          print-hash: true
 
   publish-to-pypi:
     name: Publish to PyPI
@@ -119,28 +134,18 @@ jobs:
     needs: [publish-to-test-pypi]
     if: |
       !failure() &&
-      startsWith(github.ref, 'refs/tags/')
+      github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/tags/v')
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: Download artefacts
+        uses: actions/download-artifact@v3
         with:
-          submodules: recursive
+          name: dist-packages
+          path: dist
 
-      - name: Set up Python
-        uses: actions/setup-python@v4.5.0
+      - name: Publish to test PyPI
+        uses: pypa/gh-action-pypi-publish@v1.8.5
         with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade build twine
-
-      - name: Build and publish
-        env:
-          TWINE_USERNAME: '__token__'
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          python -m build
-          twine upload dist/*
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          print-hash: true
