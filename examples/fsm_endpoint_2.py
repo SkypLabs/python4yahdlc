@@ -59,7 +59,7 @@ def serial_connection(e):
         e.fsm.connection_ko()
 
 
-def retry_serial_connection():
+def retry_serial_connection(e):
     """
     Retry serial connection state.
 
