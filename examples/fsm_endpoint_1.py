@@ -17,17 +17,13 @@ To create a virtual serial bus, you can use socat as followed:
 Then, edit `ser.port` variable as needed.
 """
 
-# pylint: disable=invalid-name
-
 import signal
-from sys import exit as sys_exit
 from sys import stderr
 from time import sleep
 
 import serial
 from fysom import Fysom
 
-# pylint: disable=no-name-in-module
 from yahdlc import FRAME_ACK, FRAME_DATA, FRAME_NACK, MessageError, frame_data, get_data
 
 # Serial port configuration.
@@ -90,14 +86,14 @@ def wait_for_ack(e):
     print("[*] Waiting for (N)ACK...")
 
     signal.signal(signal.SIGALRM, timeout_handler)
-    # 1-second timeout
+    # 1-second timeout.
     signal.alarm(1)
 
     while True:
         try:
-            # 200 µs
+            # 200 µs.
             sleep(200 / 1000000.0)
-            _, ftype, seq_no = get_data(ser.read(ser.inWaiting()))
+            _, ftype, seq_no = get_data(ser.read(ser.in_waiting))
             signal.alarm(0)
             break
         except MessageError:
@@ -140,7 +136,7 @@ def pause(e):
 
 if __name__ == "__main__":
     try:
-        fsm = Fysom(
+        Fysom(
             {
                 "initial": "init",
                 "events": [
@@ -169,6 +165,5 @@ if __name__ == "__main__":
         )
     except KeyboardInterrupt:
         print("[*] Bye!")
-        sys_exit(0)
     finally:
         ser.close()

@@ -19,12 +19,10 @@ Then, edit `ser.port` variable as needed.
 
 import signal
 from sys import exit as sys_exit
-from sys import stderr
 from time import sleep
 
 import serial
 
-# pylint: disable=no-name-in-module
 from yahdlc import (
     FRAME_ACK,
     FRAME_DATA,
@@ -35,26 +33,17 @@ from yahdlc import (
     get_data,
 )
 
+# -------------------------------------------------- #
 # Serial port configuration
-ser = serial.Serial()
-ser.port = "/dev/pts/5"
-ser.baudrate = 9600
-ser.timeout = 0
-
-print("[*] Connection...")
-
-try:
-    ser.open()
-except serial.SerialException as err:
-    stderr.write(f"[x] Serial connection problem: {err}\n")
-    sys_exit(1)
-
-print("[*] Sending data frame...")
-ser.write(frame_data("test", FRAME_DATA, 0))
-
-print("[*] Waiting for (N)ACK...")
+# -------------------------------------------------- #
+SERIAL_PORT = "/dev/pts/5"
+SERIAL_BAUDRATE = 9600
+SERIAL_TIMEOUT = 0
 
 
+# -------------------------------------------------- #
+# Set up timeout handler
+# -------------------------------------------------- #
 def timeout_handler(signum, frame):
     """
     Timeout handler.
@@ -64,49 +53,62 @@ def timeout_handler(signum, frame):
 
 
 signal.signal(signal.SIGALRM, timeout_handler)
-# 1-second timeout
+# 1-second timeout.
 signal.alarm(1)
 
-while True:
-    try:
-        # 200 µs
-        sleep(200 / 1000000.0)
-        data, ftype, seq_no = get_data(ser.read(ser.inWaiting()))
-        signal.alarm(0)
-        break
-    except MessageError:
-        pass
-    except FCSError:
-        stderr.write("[x] Bad FCS\n")
-        print("[*] Done")
-        ser.close()
-        sys_exit(0)
-    except TimeoutError as err:
-        stderr.write("[x] " + str(err) + "\n")
-        print("[*] Done")
-        ser.close()
-        sys_exit(0)
-    except KeyboardInterrupt:
-        print("[*] Bye!")
-        ser.close()
-        sys_exit(0)
+# -------------------------------------------------- #
+# Open serial port
+# -------------------------------------------------- #
+print("[*] Connection...")
 
+try:
+    with serial.Serial(SERIAL_PORT, SERIAL_BAUDRATE, timeout=SERIAL_TIMEOUT) as ser:
+        # -------------------------------------------------- #
+        # Send HDLC frame
+        # -------------------------------------------------- #
+        print("[*] Sending data frame...")
+        ser.write(frame_data("test", FRAME_DATA, 0))
+
+        # -------------------------------------------------- #
+        # Wait for (N)ACK
+        # -------------------------------------------------- #
+        print("[*] Waiting for (N)ACK...")
+        while True:
+            try:
+                # 200 µs.
+                sleep(200 / 1000000.0)
+                data, ftype, seq_no = get_data(ser.read(ser.in_waiting))
+                signal.alarm(0)
+                break
+            except MessageError:
+                # No HDLC frame detected.
+                pass
+            except FCSError:
+                sys_exit("[x] Bad FCS")
+            except TimeoutError as err:
+                sys_exit(f"[x] {str(err)}")
+            except KeyboardInterrupt:
+                print("[*] Bye!")
+                sys_exit(0)
+except serial.SerialException as err:
+    sys_exit(f"[x] Serial connection problem: {err}")
+
+# -------------------------------------------------- #
+# Handle response
+# -------------------------------------------------- #
 if ftype not in (FRAME_ACK, FRAME_NACK):
-    stderr.write(f"[x] Bad frame type: {ftype}\n")
+    sys_exit(f"[x] Bad frame type: {ftype}")
 elif ftype == FRAME_ACK:
     print("[*] ACK received")
 
     if seq_no != 1:
-        stderr.write(f"[x] Bad sequence number: {seq_no}\n")
+        sys_exit(f"[x] Bad sequence number: {seq_no}")
     else:
         print("[*] Sequence number OK")
 else:
     print("[*] NACK received")
 
     if seq_no != 0:
-        stderr.write(f"[x] Bad sequence number: {seq_no}\n")
+        sys_exit(f"[x] Bad sequence number: {seq_no}")
     else:
         print("[*] Sequence number OK")
-
-print("[*] Done")
-ser.close()

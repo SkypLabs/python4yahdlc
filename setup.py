@@ -8,17 +8,17 @@ information on this topic.
 from setuptools import Extension, setup
 
 setup(
-  ext_modules=[
-    Extension(
-      name="yahdlc",
-      sources=[
-        "src/python4yahdlc.c",
-        "yahdlc/C/fcs.c",
-        "yahdlc/C/yahdlc.c",
-      ],
-      include_dirs=[
-        "yahdlc/C/",
-      ]
-    )
-  ]
+    ext_modules=[
+        Extension(
+            name="yahdlc",
+            sources=[
+                "src/python4yahdlc.c",
+                "yahdlc/C/fcs.c",
+                "yahdlc/C/yahdlc.c",
+            ],
+            include_dirs=[
+                "yahdlc/C/",
+            ],
+        )
+    ]
 )
