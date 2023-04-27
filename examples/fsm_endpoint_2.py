@@ -8,25 +8,21 @@ This script needs some external modules. To install them:
 
     pip install python4yahdlc[examples]
 
-To create a virtual serial bus, you can use socat as followed:
+To create a virtual serial bus, you can use socat as follows:
 
 ::
 
     socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
-Then, edit `ser.port` variable as needed.
+Then, edit `ser.port` accordingly.
 """
 
-# pylint: disable=invalid-name
-
-from sys import exit as sys_exit
 from sys import stderr
 from time import sleep
 
 import serial
 from fysom import Fysom
 
-# pylint: disable=no-name-in-module
 from yahdlc import (
     FRAME_ACK,
     FRAME_DATA,
@@ -37,7 +33,9 @@ from yahdlc import (
     get_data,
 )
 
+# -------------------------------------------------- #
 # Serial port configuration
+# -------------------------------------------------- #
 ser = serial.Serial()
 ser.port = "/dev/pts/6"
 ser.baudrate = 9600
@@ -61,7 +59,7 @@ def serial_connection(e):
         e.fsm.connection_ko()
 
 
-def retry_serial_connection():
+def retry_serial_connection(e):
     """
     Retry serial connection state.
 
@@ -83,9 +81,10 @@ def wait_for_data(e):
 
     while True:
         try:
-            _, ftype, seq_no = get_data(ser.read(ser.inWaiting()))
+            _, ftype, seq_no = get_data(ser.read(ser.in_waiting))
             break
         except MessageError:
+            # No HDLC frame detected.
             pass
         except FCSError:
             stderr.write("[x] Bad FCS\n")
@@ -127,7 +126,7 @@ def send_nack_frame(e):
 
 if __name__ == "__main__":
     try:
-        fsm = Fysom(
+        Fysom(
             {
                 "initial": "init",
                 "events": [
@@ -152,6 +151,5 @@ if __name__ == "__main__":
         )
     except KeyboardInterrupt:
         print("[*] Bye!")
-        sys_exit(0)
     finally:
         ser.close()

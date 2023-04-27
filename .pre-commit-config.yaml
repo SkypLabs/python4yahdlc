@@ -1,16 +1,17 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 38b88246ccc552bffaaf54259d064beeee434539  # frozen: v4.0.1
+    rev: f71fa2c1f9cf5cb705f73dffe4b21f7c61470ba9  # frozen: v4.4.0
     hooks:
       - id: check-ast
-      - id: check-executables-have-shebangs
       - id: check-yaml
       - id: trailing-whitespace
-  - repo: https://github.com/PyCQA/flake8
-    rev: dcd740bc0ebaf2b3d43e59a0060d157c97de13f3  # frozen: 3.9.2
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: 343c49ab887fa4e5724ceb86c9c3678e647c94c2  # frozen: v0.0.262
     hooks:
-      - id: flake8
-  - repo: https://github.com/PyCQA/pylint
-    rev: 591a23adcfdd2fe20b8cfdb9e4e07772c8f454f8  # frozen: v2.10.2
+      - id: ruff
+
+  - repo: https://github.com/psf/black
+    rev: bf7a16254ec96b084a6caf3d435ec18f0f245cc7  # frozen: 23.3.0
     hooks:
-      - id: pylint
+      - id: black
