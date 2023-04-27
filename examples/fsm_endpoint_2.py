@@ -8,13 +8,13 @@ This script needs some external modules. To install them:
 
     pip install python4yahdlc[examples]
 
-To create a virtual serial bus, you can use socat as followed:
+To create a virtual serial bus, you can use socat as follows:
 
 ::
 
     socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
-Then, edit `ser.port` variable as needed.
+Then, edit `ser.port` accordingly.
 """
 
 from sys import stderr
@@ -33,7 +33,9 @@ from yahdlc import (
     get_data,
 )
 
+# -------------------------------------------------- #
 # Serial port configuration
+# -------------------------------------------------- #
 ser = serial.Serial()
 ser.port = "/dev/pts/6"
 ser.baudrate = 9600
@@ -82,6 +84,7 @@ def wait_for_data(e):
             _, ftype, seq_no = get_data(ser.read(ser.in_waiting))
             break
         except MessageError:
+            # No HDLC frame detected.
             pass
         except FCSError:
             stderr.write("[x] Bad FCS\n")

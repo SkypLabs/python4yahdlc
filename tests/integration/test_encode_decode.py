@@ -40,4 +40,5 @@ class TestEncodeDecode(unittest.TestCase):
                 self.assertEqual(FRAME_DATA, ftype)
                 self.assertEqual(0, seq_no)
             except MessageError:
+                # No HDLC frame detected.
                 pass

@@ -8,13 +8,13 @@ This script needs some external modules. To install them:
 
     pip install python4yahdlc[examples]
 
-To create a virtual serial bus, you can use socat as followed:
+To create a virtual serial bus, you can use socat as follows:
 
 ::
 
     socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
-Then, edit `ser.port` variable as needed.
+Then, edit `ser.port` accordingly.
 """
 
 import signal
@@ -26,7 +26,9 @@ from fysom import Fysom
 
 from yahdlc import FRAME_ACK, FRAME_DATA, FRAME_NACK, MessageError, frame_data, get_data
 
-# Serial port configuration.
+# -------------------------------------------------- #
+# Serial port configuration
+# -------------------------------------------------- #
 ser = serial.Serial()
 ser.port = "/dev/pts/5"
 ser.baudrate = 9600
@@ -97,9 +99,10 @@ def wait_for_ack(e):
             signal.alarm(0)
             break
         except MessageError:
+            # No HDLC frame detected.
             pass
         except TimeoutError as err:
-            stderr.write("[x] " + str(err) + "\n")
+            stderr.write(f"[x] {str(err)}\n")
             e.fsm.timeout()
 
     if ftype not in (FRAME_ACK, FRAME_NACK):

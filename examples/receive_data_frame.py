@@ -8,13 +8,13 @@ This script needs some external modules. To install them:
 
     pip install python4yahdlc[examples]
 
-To create a virtual serial bus, you can use socat as followed:
+To create a virtual serial bus, you can use socat as follows:
 
 ::
 
     socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
-Then, edit `ser.port` variable as needed
+Then, edit `SERIAL_PORT` accordingly.
 """
 
 from sys import exit as sys_exit
