@@ -79,7 +79,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.16.2
 
       - name: Upload artefacts to GitHub
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist-packages
           path: wheelhouse/*.whl
@@ -110,7 +110,7 @@ jobs:
           pipx run twine check dist/*
 
       - name: Upload artefacts to GitHub
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist-packages
           path: dist/*.tar.gz
