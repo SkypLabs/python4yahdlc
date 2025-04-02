@@ -50,7 +50,7 @@ jobs:
           pip install tox
 
       - name: Test with Tox
-        run: tox
+        run: tox -e ${{ matrix.python-version }},lint
 
   build-wheels:
     name: Build wheels
