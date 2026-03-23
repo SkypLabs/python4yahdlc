@@ -86,7 +86,7 @@ jobs:
         uses: pypa/cibuildwheel@v3.4.0
 
       - name: Upload artefacts to GitHub
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: wheelhouse/*.whl
@@ -117,7 +117,7 @@ jobs:
           pipx run twine check dist/*
 
       - name: Upload artefacts to GitHub
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cibw-sdist
           path: dist/*.tar.gz
