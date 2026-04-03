@@ -32,7 +32,7 @@ jobs:
       matrix:
         # List of runner versions:
         # https://docs.github.com/en/actions/reference/runners/github-hosted-runners
-        os: [ubuntu-24.04, macos-26-intel, windows-2025]
+        os: [ubuntu-24.04, macos-26-intel, macos-26, windows-2025]
 
         # List of Python versions:
         # https://devguide.python.org/versions/
