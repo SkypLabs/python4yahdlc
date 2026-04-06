@@ -27,7 +27,7 @@ classifiers = [
 
 [project.optional-dependencies]
 examples = ["fysom", "pyserial"]
-tests = ["black", "ruff >= 0.3", "tox"]
+tests = ["ruff >= 0.3", "tox"]
 
 [project.urls]
 "Bug Tracker" = "https://github.com/SkypLabs/python4yahdlc/issues"
