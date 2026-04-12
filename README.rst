@@ -12,7 +12,14 @@ frames.
 Dependencies
 ============
 
-This software requires Python 3.
+This software requires CPython, a C compiler such as Clang or GCC, a C standard
+library, and the Python development headers.
+
+For example, on Alpine Linux:
+
+.. code:: sh
+
+	apk add python3 gcc python3-dev musl-dev
 
 Installation
 ============
@@ -29,9 +36,16 @@ From sources
 
 .. code:: sh
 
-    git clone https://github.com/SkypLabs/python4yahdlc.git
+    # This will clone only the latest stable version of python4yahdlc.
+    git clone --single-branch --depth=1 -b main https://github.com/SkypLabs/python4yahdlc.git
+
+    # Move into the source code directory.
     cd python4yahdlc
+
+    # Initialise and clone the Git sub-modules (yahdlc itself).
     git submodule update --init --recursive
+
+    # Install python4yahdlc with pip.
     pip install --upgrade .
 
 Usage
@@ -92,13 +106,13 @@ To set up a development environment on your local machine:
     # dependencies.
     pip install -e .[examples,tests]
 
-License
+Licence
 =======
 
 This project is released under the `GPL version 3
-<https://www.gnu.org/licenses/gpl.txt>`__ license. The `yahdlc
+<https://www.gnu.org/licenses/gpl.txt>`__ licence. The `yahdlc
 <https://github.com/bang-olufsen/yahdlc>`__ library is released under the `MIT
-<https://github.com/bang-olufsen/yahdlc/blob/master/LICENSE>`__ license.
+<https://github.com/bang-olufsen/yahdlc/blob/master/LICENSE>`__ licence.
 
 .. |Build Status| image:: https://github.com/SkypLabs/python4yahdlc/actions/workflows/test_and_publish.yml/badge.svg?branch=develop
    :target: https://github.com/SkypLabs/python4yahdlc/actions/workflows/test_and_publish.yml?query=branch%3Adevelop

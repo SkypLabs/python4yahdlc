@@ -1,6 +1,35 @@
 [build-system]
-requires = [
-    "setuptools >= 42",
-    "wheel",
-]
+requires = ["setuptools >= 77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "python4yahdlc"
+version = "1.4.0"
+description = "Python binding of the yahdlc library allowing to encode and decode HDLC frames."
+readme = "README.rst"
+keywords = ["hdlc", "yahdlc", "binding", "network"]
+authors = [{ name = "Paul-Emmanuel Raoul" }]
+license = "GPL-3.0-only"
+license-files = ["LICEN[CS]E*"]
+requires-python = ">=3.10, <4"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Natural Language :: English",
+  "Programming Language :: C",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+
+[project.optional-dependencies]
+examples = ["fysom", "pyserial"]
+tests = ["ruff >= 0.3", "tox"]
+
+[project.urls]
+"Bug Tracker" = "https://github.com/SkypLabs/python4yahdlc/issues"
+"Source Code" = "https://github.com/SkypLabs/python4yahdlc"

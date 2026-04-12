@@ -20,7 +20,8 @@ static PyObject *get_data(PyObject *self, PyObject *args)
     int ret;
     const char *frame_data;
     char recv_data[TOTAL_FRAME_LENGTH];
-    unsigned int buf_length = 0, recv_length = 0;
+    Py_ssize_t buf_length = 0;
+    unsigned int recv_length = 0;
     yahdlc_control_t control;
 
     if (!PyArg_ParseTuple(args, "s#", &frame_data, &buf_length))
@@ -89,7 +90,8 @@ static PyObject *frame_data(PyObject *self, PyObject *args)
     int ret;
     const char *send_data;
     char frame_data[TOTAL_FRAME_LENGTH];
-    unsigned int data_length = 0, frame_length = 0, frame_type = YAHDLC_FRAME_DATA, seq_no = 0;
+    Py_ssize_t data_length = 0;
+    unsigned int frame_length = 0, frame_type = YAHDLC_FRAME_DATA, seq_no = 0;
     yahdlc_control_t control;
 
     if (!PyArg_ParseTuple(args, "s#|II", &send_data, &data_length, &frame_type, &seq_no))
@@ -162,7 +164,7 @@ PyMODINIT_FUNC PyInit_yahdlc(void)
         return NULL;
 
     Yahdlc_MessageError = PyErr_NewException("yahdlc.MessageError", NULL, NULL);
-    Py_INCREF(Yahdlc_MessageError);
+    Py_XINCREF(Yahdlc_MessageError);
     if (PyModule_AddObject(m, "MessageError", Yahdlc_MessageError) < 0) {
       Py_XDECREF(Yahdlc_MessageError);
       Py_CLEAR(Yahdlc_MessageError);
@@ -171,7 +173,7 @@ PyMODINIT_FUNC PyInit_yahdlc(void)
     }
 
     Yahdlc_FCSError = PyErr_NewException("yahdlc.FCSError", NULL, NULL);
-    Py_INCREF(Yahdlc_FCSError);
+    Py_XINCREF(Yahdlc_FCSError);
     if (PyModule_AddObject(m, "FCSError", Yahdlc_FCSError) < 0) {
       Py_XDECREF(Yahdlc_FCSError);
       Py_CLEAR(Yahdlc_FCSError);

@@ -3,4 +3,4 @@
 
 include yahdlc/C/*.h
 
-global-exclude *~ *.sw[op] *.py[cod] *.so
+global-exclude *~ *.sw[nop] *.py[cod] *.so

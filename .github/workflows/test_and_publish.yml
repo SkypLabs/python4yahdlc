@@ -4,12 +4,12 @@ on:
   push:
 
   pull_request:
-    branches: [ 'develop' ]
+    branches: ["develop"]
 
 jobs:
   is-duplicate:
     name: Is Duplicate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       should_skip: ${{ steps.skip-check.outputs.should_skip }}
     permissions:
@@ -30,17 +30,22 @@ jobs:
     if: needs.is-duplicate.outputs.should_skip != 'true'
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        # List of runner versions:
+        # https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+        os: [ubuntu-24.04, macos-26-intel, macos-26, windows-2025]
+
+        # List of Python versions:
+        # https://devguide.python.org/versions/
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4.5.0
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -50,7 +55,7 @@ jobs:
           pip install tox
 
       - name: Test with Tox
-        run: tox
+        run: tox -e ${{ matrix.python-version }},lint,format
 
   build-wheels:
     name: Build wheels
@@ -67,26 +72,28 @@ jobs:
       )
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # List of runner versions:
+        # https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+        os: [ubuntu-24.04, macos-26-intel, windows-2025]
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.12.3
+        uses: pypa/cibuildwheel@v3.4.0
 
       - name: Upload artefacts to GitHub
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
-          name: dist-packages
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: wheelhouse/*.whl
 
   build-sdist:
     name: Build source distribution
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: test-code
     if: |
       !failure() &&
@@ -100,7 +107,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
@@ -110,15 +117,15 @@ jobs:
           pipx run twine check dist/*
 
       - name: Upload artefacts to GitHub
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
-          name: dist-packages
+          name: cibw-sdist
           path: dist/*.tar.gz
 
   publish-to-test-pypi:
     name: Publish to TestPyPI
     environment: staging
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [build-sdist, build-wheels]
     if: |
       !failure() &&
@@ -127,13 +134,14 @@ jobs:
 
     steps:
       - name: Download artefacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v8
         with:
-          name: dist-packages
+          name: cibw-*
           path: dist
+          merge-multiple: true
 
       - name: Publish to TestPyPI
-        uses: pypa/gh-action-pypi-publish@v1.8.5
+        uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           repository-url: https://test.pypi.org/legacy/
           password: ${{ secrets.PYPI_API_TOKEN }}
@@ -142,7 +150,7 @@ jobs:
   publish-to-pypi:
     name: Publish to PyPI
     environment: production
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [publish-to-test-pypi]
     if: |
       !failure() &&
@@ -151,13 +159,14 @@ jobs:
 
     steps:
       - name: Download artefacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v8
         with:
-          name: dist-packages
+          name: cibw-*
           path: dist
+          merge-multiple: true
 
       - name: Publish to test PyPI
-        uses: pypa/gh-action-pypi-publish@v1.8.5
+        uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
           print-hash: true

@@ -1,17 +1,13 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: f71fa2c1f9cf5cb705f73dffe4b21f7c61470ba9  # frozen: v4.4.0
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
     hooks:
       - id: check-ast
       - id: check-yaml
       - id: trailing-whitespace
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 343c49ab887fa4e5724ceb86c9c3678e647c94c2  # frozen: v0.0.262
+    rev: b831c3dc5d27d9da294ae4e915773b99aa24a7c5 # frozen: v0.15.10
     hooks:
-      - id: ruff
-
-  - repo: https://github.com/psf/black
-    rev: bf7a16254ec96b084a6caf3d435ec18f0f245cc7  # frozen: 23.3.0
-    hooks:
-      - id: black
+      - id: ruff-check
+      - id: ruff-format
