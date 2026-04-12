@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 61", "wheel"]
+requires = ["setuptools >= 77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,6 +9,8 @@ description = "Python binding of the yahdlc library allowing to encode and decod
 readme = "README.rst"
 keywords = ["hdlc", "yahdlc", "binding", "network"]
 authors = [{ name = "Paul-Emmanuel Raoul" }]
+license = "GPL-3.0-only"
+license-files = ["LICEN[CS]E*"]
 requires-python = ">=3.10, <4"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -22,7 +24,6 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
-  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 ]
 
 [project.optional-dependencies]
