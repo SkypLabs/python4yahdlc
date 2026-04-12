@@ -10,8 +10,3 @@ repos:
     rev: 343c49ab887fa4e5724ceb86c9c3678e647c94c2  # frozen: v0.0.262
     hooks:
       - id: ruff
-
-  - repo: https://github.com/psf/black
-    rev: bf7a16254ec96b084a6caf3d435ec18f0f245cc7  # frozen: 23.3.0
-    hooks:
-      - id: black
