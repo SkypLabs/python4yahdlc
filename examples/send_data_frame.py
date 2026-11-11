@@ -85,7 +85,7 @@ try:
             except FCSError:
                 sys_exit("[x] Bad FCS")
             except TimeoutError as err:
-                sys_exit(f"[x] {str(err)}")
+                sys_exit(f"[x] {err!s}")
             except KeyboardInterrupt:
                 print("[*] Bye!")
                 sys_exit(0)

@@ -101,7 +101,7 @@ def wait_for_ack(e):
             # No HDLC frame detected.
             pass
         except TimeoutError as err:
-            stderr.write(f"[x] {str(err)}\n")
+            stderr.write(f"[x] {err!s}\n")
             e.fsm.timeout()
 
     if ftype not in (FRAME_ACK, FRAME_NACK):
