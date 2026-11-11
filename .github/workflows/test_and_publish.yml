@@ -136,8 +136,8 @@ jobs:
       - name: Download artefacts
         uses: actions/download-artifact@v8
         with:
-          name: cibw-*
-          path: dist
+          pattern: cibw-*
+          path: dist/
           merge-multiple: true
 
       - name: Publish to TestPyPI
@@ -161,8 +161,8 @@ jobs:
       - name: Download artefacts
         uses: actions/download-artifact@v8
         with:
-          name: cibw-*
-          path: dist
+          pattern: cibw-*
+          path: dist/
           merge-multiple: true
 
       - name: Publish to test PyPI
